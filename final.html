@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Felicidades! - Aventura Matemática</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+    <div class="header-user-info">
+      <div class="header-profile">
+        <div id="header-avatar-container"></div>
+        <span class="header-username" id="header-username-val"></span>
+      </div>
+      <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="kids-card">
+      
+      <!-- Trofeo SVG Animado -->
+      <div class="trophy-container">
+        <svg viewBox="0 0 100 100" class="trophy-svg">
+          <!-- Brillo fondo -->
+          <circle cx="50" cy="45" r="30" fill="rgba(251, 191, 36, 0.2)" />
+          <!-- Copa Oro -->
+          <path d="M 30 25 L 70 25 L 68 50 C 68 60 58 65 50 65 C 42 65 32 60 32 50 Z" fill="#fbbf24" stroke="#d97706" stroke-width="4"/>
+          <!-- Base Copa -->
+          <rect x="42" y="65" width="16" height="15" fill="#d97706" stroke="#b45309" stroke-width="3"/>
+          <rect x="30" y="77" width="40" height="8" rx="4" fill="#78350f" stroke="#451a03" stroke-width="2"/>
+          <!-- Asas -->
+          <path d="M 31 32 Q 18 35 31 48" fill="none" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 69 32 Q 82 35 69 48" fill="none" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
+          <!-- Detalle Estrella Copa -->
+          <polygon points="50,32 53,38 60,39 55,44 56,50 50,47 44,50 45,44 40,39 47,38" fill="#fff"/>
+        </svg>
+      </div>
+
+      <h1 class="kids-title text-orange">¡Felicitaciones, completaste todos los juegos!</h1>
+      
+      <!-- Contenedor de 3 Estrellas Animadas -->
+      <div class="stars-container">
+        <span class="final-star" id="star-1">⭐</span>
+        <span class="final-star" id="star-2">⭐</span>
+        <span class="final-star" id="star-3">⭐</span>
+      </div>
+
+      <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--color-purple); margin-bottom: 1.5rem;">
+        ¡Puntaje Final: <span id="final-score-val" class="text-orange">0</span> puntos!
+      </h2>
+
+      <p class="kids-subtitle tts-text tts-auto" id="celebration-text" style="font-size: 1.3rem;">
+        ¡Eres un súper campeón o campeona de las matemáticas! Resolviste sumas, restas, multiplicaciones y divisiones a la perfección. ¡Estamos muy orgullosos de ti!
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; margin-top: 2.5rem;">
+        <button onclick="irAlInicio()" class="kids-btn kids-btn-green" style="width: 100%; max-width: 320px;">
+          Volver a la Bienvenida 🏠
+        </button>
+        <button onclick="reiniciarProyecto()" class="kids-btn kids-btn-orange" style="width: 100%; max-width: 320px;">
+          Reiniciar Todo el Viaje 🔄
+        </button>
+        <a href="todos.html" class="kids-btn kids-btn-blue" style="width: 100%; max-width: 320px;">
+          Elegir un Juego Libre 🎮
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const totalScore = MathApp.getScore();
+      document.getElementById('final-score-val').textContent = totalScore;
+
+      // Lanzar confeti constante
+      MathApp.lanzarConfeti();
+      // Intervalo de confeti extra cada 2 segundos
+      const confetiInterval = setInterval(() => {
+        if (window.location.pathname.includes('final.html')) {
+          MathApp.lanzarConfeti();
+        } else {
+          clearInterval(confetiInterval);
+        }
+      }, 2000);
+
+      // Fanfarria
+      MathAudio.playWin();
+
+      // Animación secuencial de las estrellas
+      setTimeout(() => { document.getElementById('star-1').classList.add('animate'); }, 100);
+      setTimeout(() => { document.getElementById('star-2').classList.add('animate'); }, 600);
+      setTimeout(() => { document.getElementById('star-3').classList.add('animate'); }, 1100);
+
+      // Síntesis de voz del logro final
+      const nombre = localStorage.getItem('mat_nombre') || 'Aventurero';
+      const textMessage = `¡Felicitaciones ${nombre}! Completaste todos los juegos y obtuviste un total de ${totalScore} puntos. ¡Eres un súper aventurero de las matemáticas! Resolviste sumas, restas, multiplicaciones y divisiones a la perfección. ¡Estamos muy orgullosos de ti!`;
+      
+      const textEl = document.getElementById('celebration-text');
+      textEl.textContent = textMessage;
+
+      // Vinculación de parlante
+      setTimeout(() => {
+        const speakBtn = textEl.nextElementSibling;
+        if (speakBtn) {
+          speakBtn.onclick = (e) => {
+            e.stopPropagation();
+            MathAudio.playClick();
+            MathAudio.speak(textMessage, speakBtn);
+          };
+          MathAudio.speak(textMessage, speakBtn);
+        }
+      }, 1500); // Dar un pequeño respiro después de la fanfarria
+    });
+
+    function irAlInicio() {
+      window.location.href = 'bienvenida.html';
+    }
+
+    function reiniciarProyecto() {
+      MathAudio.playClick();
+      // Pone el puntaje local en 0 y redirige al primer juego
+      MathApp.reiniciarProgreso('basico4.html');
+    }
+  </script>
+</body>
+</html>

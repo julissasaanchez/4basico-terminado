@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todos los Juegos - Aventura Matemática</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="bienvenida.html" class="header-brand">🚀 Aventura Matemática</a>
+    <div class="header-user-info">
+      <div class="header-profile">
+        <div id="header-avatar-container"></div>
+        <span class="header-username" id="header-username-val"></span>
+      </div>
+      <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="kids-card" style="padding: 2rem;">
+      <h1 class="kids-title text-orange">🎮 Menú de Actividades</h1>
+      
+      <p class="kids-subtitle tts-text tts-auto" style="margin-bottom: 2rem;">
+        ¡Hola! Desde aquí puedes elegir cualquiera de los juegos matemáticos para divertirte y seguir practicando, o también reiniciar toda tu aventura si lo deseas.
+      </p>
+
+      <!-- Cuadrícula de Juegos (6 tarjetas) -->
+      <div class="todos-grid">
+        
+        <!-- Juego 1 -->
+        <div class="menu-game-card">
+          <div>
+            <span class="menu-game-icon">🛒</span>
+            <h3 class="menu-game-title">Supermercado Matemático</h3>
+            <p class="menu-game-desc">Practica sumas agregando ricos productos a tu carrito de compras.</p>
+          </div>
+          <a href="basico4.html" class="kids-btn kids-btn-orange" style="font-size: 1.05rem; padding: 0.6rem 1.2rem;">¡Jugar! ➕</a>
+        </div>
+
+        <!-- Juego 2 -->
+        <div class="menu-game-card">
+          <div>
+            <span class="menu-game-icon">💰</span>
+            <h3 class="menu-game-title">El Vuelto Correcto</h3>
+            <p class="menu-game-desc">Domina las restas entregando las monedas exactas de vuelto al cliente.</p>
+          </div>
+          <a href="juego1.html" class="kids-btn kids-btn-blue" style="font-size: 1.05rem; padding: 0.6rem 1.2rem;">¡Jugar! ➖</a>
+        </div>
+
+        <!-- Juego 3 -->
+        <div class="menu-game-card">
+          <div>
+            <span class="menu-game-icon">🧺</span>
+            <h3 class="menu-game-title">Canastas Matemáticas</h3>
+            <p class="menu-game-desc">Aprende multiplicaciones agrupando frutas ricas en las canastas.</p>
+          </div>
+          <a href="juego2.html" class="kids-btn kids-btn-purple" style="font-size: 1.05rem; padding: 0.6rem 1.2rem;">¡Jugar! ✖️</a>
+        </div>
+
+        <!-- Juego 4 -->
+        <div class="menu-game-card">
+          <div>
+            <span class="menu-game-icon">🍬</span>
+            <h3 class="menu-game-title">Repartiendo Objetos</h3>
+            <p class="menu-game-desc">Aprende divisiones repartiendo caramelos equitativamente en platos.</p>
+          </div>
+          <a href="juego3.html" class="kids-btn kids-btn-green" style="font-size: 1.05rem; padding: 0.6rem 1.2rem;">¡Jugar! ➗</a>
+        </div>
+
+        <!-- Juego 5 -->
+        <div class="menu-game-card">
+          <div>
+            <span class="menu-game-icon">🧩</span>
+            <h3 class="menu-game-title">Crucigrama Matemático</h3>
+            <p class="menu-game-desc">Resuelve el crucigrama y demuestra que conoces los términos de matemática.</p>
+          </div>
+          <a href="juego4.html" class="kids-btn kids-btn-orange" style="font-size: 1.05rem; padding: 0.6rem 1.2rem;">¡Jugar! 🧠</a>
+        </div>
+
+        <!-- Juego 6 -->
+        <div class="menu-game-card">
+          <div>
+            <span class="menu-game-icon">🏆</span>
+            <h3 class="menu-game-title">Desafío Matemático Final</h3>
+            <p class="menu-game-desc">Resuelve los problemas cotidianos de la vida real con las 4 operaciones.</p>
+          </div>
+          <a href="juego5.html" class="kids-btn kids-btn-blue" style="font-size: 1.05rem; padding: 0.6rem 1.2rem;">¡Jugar! 🌟</a>
+        </div>
+
+      </div>
+
+      <div style="border-top: 4px dashed #e2e8f0; padding-top: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+        <button onclick="reiniciarTodo()" class="kids-btn kids-btn-purple" style="width: 100%; max-width: 350px;">
+          🔄 Borrar Todo y Salir
+        </button>
+        <a href="bienvenida.html" class="kids-btn kids-btn-green" style="width: 100%; max-width: 350px;">
+          Volver a la Bienvenida 🏠
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function reiniciarTodo() {
+      if (confirm("¿Estás seguro de que quieres borrar tu nombre, avatar y puntaje? Esto reiniciará toda la experiencia.")) {
+        MathAudio.playClick();
+        MathApp.cerrarSesion();
+      }
+    }
+  </script>
+</body>
+</html>

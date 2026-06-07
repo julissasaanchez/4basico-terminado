@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crucigrama Matemático - Conceptos</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+    <div class="header-user-info">
+      <div class="header-profile">
+        <div id="header-avatar-container"></div>
+        <span class="header-username" id="header-username-val"></span>
+      </div>
+      <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="kids-card game-card">
+      <h1 class="kids-title text-purple">🧩 Crucigrama Matemático</h1>
+      
+      <div class="game-info-row">
+        <span class="round-indicator">Nivel Único</span>
+        <div class="progress-bar-container" style="max-width: 150px;">
+          <div class="progress-bar-fill" style="width: 50%;"></div>
+        </div>
+        <span class="round-indicator">🧠 Vocabulario</span>
+      </div>
+
+      <!-- Instrucción con voz -->
+      <div style="margin-bottom: 1.5rem; text-align: left;">
+        <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+          ¡Resuelve el crucigrama! Lee las pistas horizontales y verticales. Haz clic en las pistas para escucharlas. Al rellenar todo, presiona "Validar Crucigrama".
+        </span>
+      </div>
+
+      <!-- Workspace: Cuadrícula y Pistas -->
+      <div class="game-workspace">
+        <div class="crossword-container">
+          
+          <!-- Cuadrícula -->
+          <div class="crossword-grid" id="grid-container">
+            <!-- Rellenado dinámicamente por JS en base a coordenadas -->
+          </div>
+
+          <!-- Pistas -->
+          <div class="crossword-clues">
+            
+            <div class="clue-section-title">➡️ Horizontales</div>
+            <ul class="clue-list" style="margin-bottom: 1.5rem;">
+              <li class="clue-item" data-word="resta" onclick="leerPista('resta', this)">
+                <span><strong>1. RESTA:</strong> Quitar o disminuir elementos a una cantidad.</span>
+                <span>🔊</span>
+              </li>
+              <li class="clue-item" data-word="dividir" onclick="leerPista('dividir', this)">
+                <span><strong>3. DIVIDIR:</strong> Repartir en partes iguales.</span>
+                <span>🔊</span>
+              </li>
+              <li class="clue-item" data-word="suma" onclick="leerPista('suma', this)">
+                <span><strong>4. SUMA:</strong> Juntar, agregar o unir dos o más cantidades.</span>
+                <span>🔊</span>
+              </li>
+            </ul>
+
+            <div class="clue-section-title">⬇️ Verticales</div>
+            <ul class="clue-list">
+              <li class="clue-item" data-word="mitad" onclick="leerPista('mitad', this)">
+                <span><strong>2. MITAD:</strong> Si partes una naranja en dos porciones iguales, cada parte es la...</span>
+                <span>🔊</span>
+              </li>
+              <li class="clue-item" data-word="doble" onclick="leerPista('doble', this)">
+                <span><strong>5. DOBLE:</strong> Multiplicar por 2, o tener dos veces una cantidad.</span>
+                <span>🔊</span>
+              </li>
+            </ul>
+
+          </div>
+
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-overlay" id="feedback-panel">
+          <div class="feedback-content">
+            <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+            <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
+            <p class="feedback-msg tts-text" id="feedback-msg">¡Crucigrama completo!</p>
+            <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente Juego! ➡️</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Acciones de juego -->
+      <div class="game-actions">
+        <button onclick="reiniciarCrucigrama()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+          🔄 Limpiar Todo
+        </button>
+        <button onclick="validarCrucigrama()" class="kids-btn kids-btn-orange">
+          Validar Crucigrama 🕵️‍♂️
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Palabras y sus coordenadas (Fila, Columna) 0-indexed
+    // Cuadrícula de 11 filas (0-10) x 12 columnas (0-11)
+    const wordsConfig = {
+      dividir: {
+        cells: [[4,2,'D'], [4,3,'I'], [4,4,'V'], [4,5,'I'], [4,6,'D'], [4,7,'I'], [4,8,'R']],
+        direction: 'H',
+        clue: "Dividir: Repartir una cantidad en partes iguales."
+      },
+      mitad: {
+        cells: [[3,3,'M'], [4,3,'I'], [5,3,'T'], [6,3,'A'], [7,3,'D']],
+        direction: 'V',
+        clue: "Mitad: Si partes una naranja en dos porciones iguales, cada parte es la mitad."
+      },
+      resta: {
+        cells: [[5,0,'R'], [5,1,'E'], [5,2,'S'], [5,3,'T'], [5,4,'A']],
+        direction: 'H',
+        clue: "Resta: Quitar o disminuir elementos a una cantidad."
+      },
+      suma: {
+        cells: [[6,0,'S'], [6,1,'U'], [6,2,'M'], [6,3,'A']],
+        direction: 'H',
+        clue: "Suma: Juntar, agregar o unir dos o más cantidades."
+      },
+      doble: {
+        cells: [[4,6,'D'], [5,6,'O'], [6,6,'B'], [7,6,'L'], [8,6,'E']],
+        direction: 'V',
+        clue: "Doble: Multiplicar por 2 o tener dos veces una cantidad."
+      }
+    };
+
+    // Números que se colocan al inicio de la palabra
+    const cellNumbers = {
+      "5,0": 1, // RESTA
+      "3,3": 2, // MITAD
+      "4,2": 3, // DIVIDIR
+      "6,0": 4, // SUMA
+      "4,6": 5  // DOBLE
+    };
+
+    const rowsCount = 11;
+    const colsCount = 12;
+    const activeCells = {}; // Guarda la letra correcta para cada coordenada "r,c"
+
+    // Mapear celdas activas
+    Object.keys(wordsConfig).forEach(wName => {
+      const w = wordsConfig[wName];
+      w.cells.forEach(cell => {
+        const key = `${cell[0]},${cell[1]}`;
+        activeCells[key] = cell[2];
+      });
+    });
+
+    // Construir la cuadrícula
+    function crearCuadrícula() {
+      const grid = document.getElementById('grid-container');
+      grid.innerHTML = '';
+
+      for (let r = 0; r < rowsCount; r++) {
+        for (let c = 0; c < colsCount; c++) {
+          const cellKey = `${r},${c}`;
+          const isPlayable = activeCells[cellKey] !== undefined;
+
+          const cellDiv = document.createElement('div');
+          cellDiv.className = isPlayable ? 'crossword-cell' : 'crossword-cell empty';
+
+          if (isPlayable) {
+            // Si tiene número indicador de inicio de palabra
+            if (cellNumbers[cellKey]) {
+              const numSpan = document.createElement('span');
+              numSpan.className = 'crossword-number';
+              numSpan.textContent = cellNumbers[cellKey];
+              cellDiv.appendChild(numSpan);
+            }
+
+            // Crear input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.maxLength = 1;
+            input.setAttribute('data-row', r);
+            input.setAttribute('data-col', c);
+            input.id = `input-${r}-${c}`;
+            
+            // Navegación inteligente al escribir
+            input.addEventListener('input', (e) => {
+              const val = input.value.toUpperCase();
+              input.value = val;
+              if (val.length === 1) {
+                avanzarCursor(r, c);
+              }
+            });
+
+            // Navegación por teclado flechas
+            input.addEventListener('keydown', (e) => {
+              if (e.key === 'Backspace' && input.value === '') {
+                retrocederCursor(r, c);
+              }
+            });
+
+            // Al hacer focus, marcar pistas asociadas
+            input.addEventListener('focus', () => {
+              resaltarPistasAsociadas(r, c);
+            });
+
+            cellDiv.appendChild(input);
+          }
+
+          grid.appendChild(cellDiv);
+        }
+      }
+    }
+
+    // Navegación automática del cursor al escribir
+    function avanzarCursor(r, c) {
+      // Priorizar avanzar a la derecha o abajo en la palabra activa
+      // Buscamos si hay una celda jugable a la derecha
+      const rightInput = document.getElementById(`input-${r}-${c + 1}`);
+      if (rightInput) {
+        rightInput.focus();
+        return;
+      }
+      // Si no, abajo
+      const downInput = document.getElementById(`input-${r + 1}-${c}`);
+      if (downInput) {
+        downInput.focus();
+      }
+    }
+
+    // Retroceder cursor al borrar
+    function retrocederCursor(r, c) {
+      const leftInput = document.getElementById(`input-${r}-${c - 1}`);
+      if (leftInput) {
+        leftInput.focus();
+        return;
+      }
+      const upInput = document.getElementById(`input-${r - 1}-${c}`);
+      if (upInput) {
+        upInput.focus();
+      }
+    }
+
+    // Resaltar las pistas que cruzan esta celda
+    function resaltarPistasAsociadas(r, c) {
+      // Limpiar activos
+      document.querySelectorAll('.clue-item').forEach(el => el.classList.remove('active'));
+
+      Object.keys(wordsConfig).forEach(wName => {
+        const w = wordsConfig[wName];
+        const isMember = w.cells.some(cell => cell[0] === r && cell[1] === c);
+        if (isMember) {
+          const clueEl = document.querySelector(`.clue-item[data-word="${wName}"]`);
+          if (clueEl) {
+            clueEl.classList.add('active');
+          }
+        }
+      });
+    }
+
+    // Leer pista en voz alta
+    function leerPista(wName, el) {
+      MathAudio.playClick();
+      
+      // Resaltar visualmente
+      document.querySelectorAll('.clue-item').forEach(li => li.classList.remove('active'));
+      el.classList.add('active');
+
+      const data = wordsConfig[wName];
+      MathAudio.speak(data.clue, el.querySelector('span:last-child'));
+    }
+
+    // Validar crucigrama al final
+    function validarCrucigrama() {
+      let todoCorrecto = true;
+      let celdasIncompletas = false;
+
+      // Recorrer todas las celdas activas
+      Object.keys(activeCells).forEach(key => {
+        const coords = key.split(',');
+        const r = parseInt(coords[0], 10);
+        const c = parseInt(coords[1], 10);
+        const input = document.getElementById(`input-${r}-${c}`);
+        const userChar = input.value.trim().toUpperCase();
+
+        if (userChar === '') {
+          celdasIncompletas = true;
+          todoCorrecto = false;
+          input.parentNode.classList.remove('correct');
+        } else if (userChar === activeCells[key]) {
+          input.parentNode.classList.add('correct');
+        } else {
+          todoCorrecto = false;
+          input.parentNode.classList.remove('correct');
+        }
+      });
+
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      if (todoCorrecto) {
+        // Victoria!
+        MathAudio.playCorrect();
+        MathApp.lanzarConfeti();
+        MathApp.addScore(20); // +20 puntos
+
+        title.textContent = "¡Crucigrama Resuelto!";
+        title.className = "feedback-title success";
+        emoji.textContent = "🧠";
+        
+        const successMsg = "¡Fabuloso! Encontraste todas las palabras y definiste los conceptos clave de matemáticas. ¡Ganaste 20 puntos!";
+        msg.textContent = successMsg;
+        feedback.style.display = 'flex';
+        MathAudio.speak(successMsg);
+
+        nextBtn.onclick = () => {
+          window.location.href = 'juego5.html';
+        };
+
+      } else {
+        // Fallo
+        MathAudio.playIncorrect();
+
+        let errorMsg = "¡Oh! Hay algunas letras incorrectas en tu crucigrama. Las celdas correctas se marcarán en verde. ¡Revisa e inténtalo de nuevo!";
+        if (celdasIncompletas) {
+          errorMsg = "¡Hay casillas vacías! Completa todo el crucigrama antes de validar.";
+        }
+
+        MathAudio.speak(errorMsg);
+
+        // Sacudida visual
+        const grid = document.getElementById('grid-container');
+        grid.classList.add('shake-element');
+        setTimeout(() => grid.classList.remove('shake-element'), 500);
+      }
+    }
+
+    // Limpiar cuadrícula
+    function reiniciarCrucigrama() {
+      MathAudio.playClick();
+      Object.keys(activeCells).forEach(key => {
+        const coords = key.split(',');
+        const r = parseInt(coords[0], 10);
+        const c = parseInt(coords[1], 10);
+        const input = document.getElementById(`input-${r}-${c}`);
+        input.value = '';
+        input.parentNode.classList.remove('correct');
+      });
+      document.querySelectorAll('.clue-item').forEach(el => el.classList.remove('active'));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      crearCuadrícula();
+      
+      // Auto leer instrucción inicial
+      setTimeout(() => {
+        const instr = document.getElementById('game-instruction');
+        const speakBtn = instr.nextElementSibling;
+        if (speakBtn) {
+          MathAudio.speak(instr.textContent, speakBtn);
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

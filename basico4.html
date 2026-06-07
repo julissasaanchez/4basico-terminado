@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supermercado Matemático - Sumas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+    <div class="header-user-info">
+      <div class="header-profile">
+        <div id="header-avatar-container"></div>
+        <span class="header-username" id="header-username-val"></span>
+      </div>
+      <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="kids-card game-card">
+      <h1 class="kids-title text-orange">🛒 Supermercado Matemático</h1>
+      
+      <div class="game-info-row">
+        <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <span class="round-indicator">➕ Sumas</span>
+      </div>
+
+      <!-- Instrucción con voz -->
+      <div style="margin-bottom: 1.5rem; text-align: left;">
+        <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+          ¡Haz las compras! Arrastra o haz clic en los productos para ponerlos en el carrito según la lista, y luego calcula el precio total.
+        </span>
+      </div>
+
+      <!-- Lista de compras -->
+      <div style="background: #fffbeb; border: 3px solid #fef3c7; border-radius: 20px; padding: 1rem; margin-bottom: 1.5rem; text-align: left;">
+        <h3 style="color: var(--color-orange); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          📋 Lista de Compras:
+        </h3>
+        <ul id="shopping-list" style="list-style: none; font-size: 1.15rem; font-weight: 600; display: flex; flex-direction: column; gap: 0.3rem;">
+          <!-- Se llena dinámicamente -->
+        </ul>
+      </div>
+
+      <!-- Zona de Trabajo -->
+      <div class="game-workspace">
+        
+        <!-- Estantería de Productos -->
+        <div>
+          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+            🛍️ Estantería (Haz clic o arrastra al carrito):
+          </div>
+          <div class="market-shelf" id="shelf-container">
+            <!-- Se llena dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Carrito de compras -->
+        <div style="margin-top: 1rem;">
+          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+            🛒 Tu Carrito (Haz clic en un producto para sacarlo):
+          </div>
+          <div class="cart-dropzone drop-target" id="cart-zone" ondragover="allowDrop(event)" ondrop="handleDrop(event)">
+            <div class="cart-items-list" id="cart-items">
+              <!-- Productos arrastrados -->
+            </div>
+            <div id="cart-placeholder" style="color: var(--text-muted); font-weight: 600; pointer-events: none;">
+              ¡Carrito vacío! Pon los productos aquí.
+            </div>
+          </div>
+        </div>
+
+        <!-- Selección del Total Oculto al inicio -->
+        <div id="total-selection-area" class="hidden" style="margin-top: 1.5rem; background: #f0fdf4; border: 3px solid #dcfce7; padding: 1.2rem; border-radius: 20px;">
+          <h3 class="tts-text" id="total-question" style="color: var(--color-green); margin-bottom: 0.8rem; font-size: 1.2rem;">
+            ¡Excelente! Pusiste los productos correctos. Ahora, ¿cuánto es el precio total de tu compra?
+          </h3>
+          <div class="options-grid" id="options-container">
+            <!-- Botones de opciones creados en JS -->
+          </div>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-overlay" id="feedback-panel">
+          <div class="feedback-content">
+            <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+            <h2 class="feedback-title success" id="feedback-title">¡Fantástico!</h2>
+            <p class="feedback-msg tts-text" id="feedback-msg">¡Lo lograste!</p>
+            <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Acciones de juego -->
+      <div class="game-actions">
+        <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+          🔄 Reiniciar Nivel
+        </button>
+        <button id="btn-validar-cart" onclick="validarCarrito()" class="kids-btn kids-btn-orange">
+          Revisar Carrito 🕵️‍♂️
+        </button>
+        <button id="btn-next-game" class="kids-btn kids-btn-green hidden">
+          Siguiente Juego 🚀
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Datos de rondas
+    const rounds = [
+      {
+        list: { manzana: 2, leche: 1 },
+        listText: ["🍎 2 Manzanas (cada una cuesta $120)", "🥛 1 Leche (cuesta $300)"],
+        instruction: "Compra 2 manzanas y 1 caja de leche. Ponlos en el carrito y luego calcula el valor total.",
+        shelf: [
+          { id: 'manzana', name: 'Manzana', price: 120, svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="30" fill="#f43f5e"/><path d="M 50 25 C 48 18 58 10 60 12 C 62 14 55 22 51 25" stroke="#854d0e" stroke-width="4" fill="#4ade80"/><circle cx="50" cy="55" r="28" fill="none" stroke="#e11d48" stroke-width="2"/></svg>' },
+          { id: 'leche', name: 'Leche', price: 300, svg: '<svg viewBox="0 0 100 100"><rect x="30" y="25" width="40" height="60" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="4"/><path d="M 30 45 L 70 45" stroke="#3b82f6" stroke-width="3"/><circle cx="50" cy="65" r="10" fill="#93c5fd"/></svg>' },
+          { id: 'platano', name: 'Plátano', price: 100, svg: '<svg viewBox="0 0 100 100"><path d="M 25 35 Q 50 20 75 45 Q 50 65 25 35" fill="#facc15" stroke="#ca8a04" stroke-width="3"/></svg>' }
+        ],
+        total: 540,
+        options: [420, 540, 620]
+      },
+      {
+        list: { pan: 1, platano: 2 },
+        listText: ["🍞 1 Pan (cuesta $150)", "🍌 2 Plátanos (cada uno cuesta $100)"],
+        instruction: "Compra 1 pan calientito y 2 plátanos dulces. Ponlos en el carrito y luego calcula el precio total.",
+        shelf: [
+          { id: 'pan', name: 'Pan', price: 150, svg: '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="35" ry="22" fill="#f59e0b" stroke="#b45309" stroke-width="4"/><path d="M 30 40 Q 35 48 40 40 M 45 40 Q 50 48 55 40 M 60 40 Q 65 48 70 40" stroke="#b45309" stroke-width="3" fill="none"/></svg>' },
+          { id: 'platano', name: 'Plátano', price: 100, svg: '<svg viewBox="0 0 100 100"><path d="M 25 35 Q 50 20 75 45 Q 50 65 25 35" fill="#facc15" stroke="#ca8a04" stroke-width="3"/></svg>' },
+          { id: 'queso', name: 'Queso', price: 400, svg: '<svg viewBox="0 0 100 100"><polygon points="20,70 80,70 65,30 20,70" fill="#fde047" stroke="#eab308" stroke-width="4"/><circle cx="35" cy="55" r="4" fill="#ca8a04"/><circle cx="55" cy="58" r="5" fill="#ca8a04"/></svg>' }
+        ],
+        total: 350,
+        options: [350, 250, 450]
+      },
+      {
+        list: { jugo: 1, queso: 1, manzana: 1 },
+        listText: ["🧃 1 Jugo (cuesta $250)", "🧀 1 Queso (cuesta $400)", "🍎 1 Manzana (cuesta $120)"],
+        instruction: "Compra 1 jugo fresco, 1 porción de queso y 1 manzana. Ponlos en el carrito y calcula el total.",
+        shelf: [
+          { id: 'jugo', name: 'Jugo', price: 250, svg: '<svg viewBox="0 0 100 100"><rect x="32" y="25" width="36" height="55" rx="6" fill="#fdba74" stroke="#f97316" stroke-width="4"/><rect x="42" y="15" width="6" height="10" fill="#f97316"/><circle cx="50" cy="55" r="8" fill="#fff"/></svg>' },
+          { id: 'queso', name: 'Queso', price: 400, svg: '<svg viewBox="0 0 100 100"><polygon points="20,70 80,70 65,30 20,70" fill="#fde047" stroke="#eab308" stroke-width="4"/><circle cx="35" cy="55" r="4" fill="#ca8a04"/><circle cx="55" cy="58" r="5" fill="#ca8a04"/></svg>' },
+          { id: 'manzana', name: 'Manzana', price: 120, svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="30" fill="#f43f5e"/><path d="M 50 25 C 48 18 58 10 60 12 C 62 14 55 22 51 25" stroke="#854d0e" stroke-width="4" fill="#4ade80"/><circle cx="50" cy="55" r="28" fill="none" stroke="#e11d48" stroke-width="2"/></svg>' }
+        ],
+        total: 770,
+        options: [670, 870, 770]
+      }
+    ];
+
+    let currentRoundIndex = 0;
+    let cart = [];
+    let selectedTotal = null;
+
+    // Inicializar juego
+    function cargarRonda() {
+      const data = rounds[currentRoundIndex];
+      cart = [];
+      selectedTotal = null;
+
+      // Actualizar interfaz general
+      document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
+      document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
+      
+      const instr = document.getElementById('game-instruction');
+      instr.textContent = data.instruction;
+      
+      // Reiniciar TTS
+      const speakBtn = instr.nextElementSibling;
+      if (speakBtn) {
+        speakBtn.onclick = (e) => {
+          e.stopPropagation();
+          MathAudio.playClick();
+          MathAudio.speak(data.instruction, speakBtn);
+        };
+        // Auto-hablar instrucción al cargar la ronda
+        MathAudio.speak(data.instruction, speakBtn);
+      }
+
+      // Cargar lista de compras
+      const listContainer = document.getElementById('shopping-list');
+      listContainer.innerHTML = '';
+      data.listText.forEach(t => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        listContainer.appendChild(li);
+      });
+
+      // Cargar estantería
+      const shelfContainer = document.getElementById('shelf-container');
+      shelfContainer.innerHTML = '';
+      data.shelf.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'drag-item';
+        el.draggable = true;
+        el.setAttribute('data-id', item.id);
+        el.innerHTML = `${item.svg}<span class="drag-item-label">${item.name}<br>$${item.price}</span>`;
+        
+        // Eventos Drag
+        el.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', item.id);
+        });
+
+        // Evento click para accesibilidad móvil/táctil
+        el.addEventListener('click', () => {
+          agregarAlCarro(item.id);
+        });
+
+        shelfContainer.appendChild(el);
+      });
+
+      // Limpiar carro y áreas
+      actualizarCarroVista();
+      document.getElementById('total-selection-area').classList.add('hidden');
+      document.getElementById('feedback-panel').style.display = 'none';
+      
+      // Mostrar y habilitar botón de validar carro
+      document.getElementById('btn-validar-cart').classList.remove('hidden');
+      document.getElementById('btn-validar-cart').disabled = false;
+    }
+
+    // Drag and drop handlers
+    function allowDrop(e) {
+      e.preventDefault();
+      document.getElementById('cart-zone').classList.add('drag-over');
+    }
+
+    document.getElementById('cart-zone').addEventListener('dragleave', () => {
+      document.getElementById('cart-zone').classList.remove('drag-over');
+    });
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('cart-zone').classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      if (id) {
+        agregarAlCarro(id);
+      }
+    }
+
+    // Agregar producto al carro
+    function agregarAlCarro(id) {
+      const data = rounds[currentRoundIndex];
+      const prod = data.shelf.find(p => p.id === id);
+      if (prod) {
+        cart.push(prod);
+        MathAudio.playClick();
+        actualizarCarroVista();
+      }
+    }
+
+    // Sacar producto del carro
+    function sacarDelCarro(index) {
+      cart.splice(index, 1);
+      MathAudio.playClick();
+      actualizarCarroVista();
+    }
+
+    // Dibujar carro
+    function actualizarCarroVista() {
+      const itemsContainer = document.getElementById('cart-items');
+      const placeholder = document.getElementById('cart-placeholder');
+      
+      itemsContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        placeholder.style.display = 'block';
+      } else {
+        placeholder.style.display = 'none';
+        cart.forEach((item, index) => {
+          const el = document.createElement('div');
+          el.className = 'drag-item';
+          el.style.width = '70px';
+          el.style.padding = '0.2rem';
+          el.innerHTML = `${item.svg}`;
+          el.addEventListener('click', () => sacarDelCarro(index));
+          itemsContainer.appendChild(el);
+        });
+      }
+    }
+
+    // Validar productos en carro
+    function validarCarrito() {
+      const data = rounds[currentRoundIndex];
+      
+      // Contar productos en el carrito actual
+      const conteo = {};
+      cart.forEach(item => {
+        conteo[item.id] = (conteo[item.id] || 0) + 1;
+      });
+
+      // Comparar con la lista de compras requerida
+      let esCorrecto = true;
+      
+      // Comprobar que estén los requeridos
+      for (const [id, cant] of Object.entries(data.list)) {
+        if ((conteo[id] || 0) !== cant) {
+          esCorrecto = false;
+          break;
+        }
+      }
+
+      // Comprobar que no haya extras no deseados
+      for (const id of Object.keys(conteo)) {
+        if (!data.list[id]) {
+          esCorrecto = false;
+          break;
+        }
+      }
+
+      if (esCorrecto) {
+        // Bloquear carro
+        document.getElementById('btn-validar-cart').disabled = true;
+        
+        // Habilitar la sección de sumas
+        const selectionArea = document.getElementById('total-selection-area');
+        selectionArea.classList.remove('hidden');
+        
+        const questionText = document.getElementById('total-question');
+        MathAudio.speak(questionText.textContent);
+
+        // Cargar opciones
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        data.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'kids-btn kids-btn-blue';
+          btn.style.fontSize = '1.3rem';
+          btn.textContent = `$${opt}`;
+          btn.onclick = () => seleccionarTotal(opt, btn);
+          optionsContainer.appendChild(btn);
+        });
+
+      } else {
+        // Audio error
+        MathAudio.playIncorrect();
+        
+        // Voz error
+        MathAudio.speak("¡Oh, te has equivocado de productos! Revisa la lista e inténtalo de nuevo.");
+
+        // Sacudida visual
+        const workspace = document.querySelector('.game-workspace');
+        workspace.classList.add('shake-element');
+        setTimeout(() => workspace.classList.remove('shake-element'), 500);
+      }
+    }
+
+    // Seleccionar la respuesta de suma
+    function seleccionarTotal(valor, btn) {
+      selectedTotal = valor;
+      // Resaltar seleccionado
+      document.querySelectorAll('#options-container button').forEach(b => {
+        b.className = 'kids-btn kids-btn-blue';
+      });
+      btn.className = 'kids-btn kids-btn-orange';
+      MathAudio.playClick();
+      
+      // Validar la suma directamente al presionar la opción
+      comprobarTotal();
+    }
+
+    // Validar suma final
+    function comprobarTotal() {
+      const data = rounds[currentRoundIndex];
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      if (selectedTotal === data.total) {
+        // Acierto!
+        MathAudio.playCorrect();
+        MathApp.lanzarConfeti();
+        
+        // Sumar puntos
+        MathApp.addScore(10);
+
+        title.textContent = "¡Excelente!";
+        title.className = "feedback-title success";
+        emoji.textContent = "🍎";
+        
+        const successMsg = `¡Correcto! El total de la compra es $${data.total}. ¡Has ganado 10 puntos!`;
+        msg.textContent = successMsg;
+
+        feedback.style.display = 'flex';
+        MathAudio.speak(successMsg);
+
+        nextBtn.onclick = () => {
+          currentRoundIndex++;
+          if (currentRoundIndex < rounds.length) {
+            cargarRonda();
+          } else {
+            // Completó las 3 rondas!
+            document.getElementById('progress-bar').style.width = '100%';
+            mostrarVictoriaNivelCompleto();
+          }
+        };
+
+      } else {
+        // Fallo!
+        MathAudio.playIncorrect();
+        
+        const errorMsg = "¡Suma incorrecta! Vuelve a sumar con calma.";
+        MathAudio.speak(errorMsg);
+
+        // Sacudir opciones
+        const optGrid = document.getElementById('options-container');
+        optGrid.classList.add('shake-element');
+        setTimeout(() => optGrid.classList.remove('shake-element'), 500);
+      }
+    }
+
+    // Victoria del nivel
+    function mostrarVictoriaNivelCompleto() {
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      // Animaciones
+      MathApp.lanzarConfeti();
+      MathAudio.playWin();
+
+      title.textContent = "¡Nivel Completado!";
+      title.className = "feedback-title success";
+      emoji.textContent = "🏆";
+      
+      const finishedMsg = "¡Impresionante! Completaste todas las compras del Supermercado Matemático.";
+      msg.textContent = finishedMsg;
+      
+      nextBtn.textContent = "Siguiente Juego 🚀";
+      feedback.style.display = 'flex';
+      MathAudio.speak(finishedMsg);
+
+      nextBtn.onclick = () => {
+        window.location.href = 'juego1.html';
+      };
+    }
+
+    // Botón reiniciar ronda
+    function reiniciarRonda() {
+      MathAudio.playClick();
+      cargarRonda();
+    }
+
+    // Inicializar al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarRonda();
+    });
+  </script>
+</body>
+</html>

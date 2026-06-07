@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gran Desafío Matemático Final - Problemas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+    <div class="header-user-info">
+      <div class="header-profile">
+        <div id="header-avatar-container"></div>
+        <span class="header-username" id="header-username-val"></span>
+      </div>
+      <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="kids-card game-card">
+      <h1 class="kids-title text-orange">🏆 Gran Desafío Matemático Final</h1>
+      
+      <div class="game-info-row">
+        <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <span class="round-indicator">⭐ Desafío Mixto</span>
+      </div>
+
+      <!-- Instrucción con voz -->
+      <div style="margin-bottom: 1.5rem; text-align: left;">
+        <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+          ¡El desafío final! Resuelve el problema cotidiano. Arrastra o haz clic en la burbuja con el número correcto para completar la respuesta.
+        </span>
+      </div>
+
+      <!-- Zona de Trabajo -->
+      <div class="game-workspace">
+        
+        <!-- Tarjeta del Problema -->
+        <div class="problem-card" id="problem-area">
+          <p class="problem-text tts-text" id="story-text">
+            Sofi tiene $600 y encuentra $250 más en su mochila. ¿Cuánto dinero tiene en total en pesos?
+          </p>
+          
+          <div class="problem-equation">
+            <span class="equation-part" id="eq-val1">600</span>
+            <span class="equation-part" id="eq-op">+</span>
+            <span class="equation-part" id="eq-val2">250</span>
+            <span class="equation-part">=</span>
+            <div class="answer-slot drop-target" id="answer-zone" ondragover="allowDrop(event)" ondrop="handleDrop(event)" onclick="devolverBurbuja()">
+              ?
+            </div>
+            <span class="equation-part" id="eq-unit">pesos</span>
+          </div>
+        </div>
+
+        <!-- Banco de Números -->
+        <div>
+          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;">
+            🎈 Burbujas Numéricas (Arrastra o haz clic en una opción):
+          </div>
+          <div class="number-bank" id="bubbles-container">
+            <!-- Burbujas de números -->
+          </div>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-overlay" id="feedback-panel">
+          <div class="feedback-content">
+            <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+            <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
+            <p class="feedback-msg tts-text" id="feedback-msg">¡Resuelto correctamente!</p>
+            <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Acciones de juego -->
+      <div class="game-actions">
+        <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+          🔄 Limpiar Respuesta
+        </button>
+        <button onclick="validarDesafio()" class="kids-btn kids-btn-orange">
+          Validar Desafío 🕵️‍♂️
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const rounds = [
+      {
+        story: "Sofi tiene 600 pesos y encuentra 250 pesos más en su mochila. ¿Cuánto dinero tiene en total?",
+        val1: 600,
+        val2: 250,
+        op: "+",
+        unit: "pesos",
+        total: 850,
+        options: [750, 850, 950],
+        successPhrase: "¡Correcto! Sofi tiene 850 pesos. ¡La suma fue un éxito!"
+      },
+      {
+        story: "Lucho tiene 12 bolitas de colores y las reparte en partes iguales entre sus 3 amigos. ¿Cuántas bolitas recibe cada uno?",
+        val1: 12,
+        val2: 3,
+        op: "÷",
+        unit: "bolitas",
+        total: 4,
+        options: [3, 4, 6],
+        successPhrase: "¡Correcto! Cada amigo recibe 4 bolitas. ¡Excelente división!"
+      },
+      {
+        story: "Para una fiesta se compran 5 paquetes de globos de colores. Si cada paquete trae 6 globos, ¿cuántos globos hay en total?",
+        val1: 5,
+        val2: 6,
+        op: "x",
+        unit: "globos",
+        total: 30,
+        options: [11, 24, 30],
+        successPhrase: "¡Extraordinario! Hay 30 globos en total. ¡La multiplicación estuvo fantástica!"
+      }
+    ];
+
+    let currentRoundIndex = 0;
+    let placedNumber = null; // El número colocado en el slot
+
+    function cargarRonda() {
+      const data = rounds[currentRoundIndex];
+      placedNumber = null;
+
+      // Interfaz general
+      document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
+      document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
+
+      // Actualizar tarjeta del problema
+      document.getElementById('story-text').textContent = data.story;
+      document.getElementById('eq-val1').textContent = data.val1;
+      document.getElementById('eq-op').textContent = data.op;
+      document.getElementById('eq-val2').textContent = data.val2;
+      document.getElementById('eq-unit').textContent = data.unit;
+
+      // Resetear slot
+      const slot = document.getElementById('answer-zone');
+      slot.textContent = "?";
+      slot.style.borderColor = "var(--color-blue)";
+      slot.style.background = "rgba(58, 183, 248, 0.05)";
+
+      // Vincular voz del problema
+      const storyEl = document.getElementById('story-text');
+      const speakBtn = storyEl.nextElementSibling;
+      if (speakBtn) {
+        speakBtn.onclick = (e) => {
+          e.stopPropagation();
+          MathAudio.playClick();
+          MathAudio.speak(data.story, speakBtn);
+        };
+        MathAudio.speak(data.story, speakBtn);
+      }
+
+      // Cargar banco de burbujas
+      dibujarBurbujas();
+
+      document.getElementById('feedback-panel').style.display = 'none';
+    }
+
+    function dibujarBurbujas() {
+      const data = rounds[currentRoundIndex];
+      const bank = document.getElementById('bubbles-container');
+      bank.innerHTML = '';
+
+      data.options.forEach(num => {
+        // Si ya está colocado, no dibujarlo en el banco
+        if (placedNumber === num) return;
+
+        const bubble = document.createElement('div');
+        bubble.className = 'number-bubble';
+        bubble.draggable = true;
+        bubble.textContent = num;
+        
+        // Drag handlers
+        bubble.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', num.toString());
+        });
+
+        // Click handler (autocolocar)
+        bubble.addEventListener('click', () => {
+          colocarNumero(num);
+        });
+
+        bank.appendChild(bubble);
+      });
+    }
+
+    // Drag events
+    function allowDrop(e) {
+      e.preventDefault();
+      document.getElementById('answer-zone').classList.add('drag-over');
+    }
+
+    document.getElementById('answer-zone').addEventListener('dragleave', () => {
+      document.getElementById('answer-zone').classList.remove('drag-over');
+    });
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('answer-zone').classList.remove('drag-over');
+      const numStr = e.dataTransfer.getData('text/plain');
+      if (numStr) {
+        const num = parseInt(numStr, 10);
+        colocarNumero(num);
+      }
+    }
+
+    // Colocar número en slot
+    function colocarNumero(num) {
+      placedNumber = num;
+      MathAudio.playClick();
+
+      // Rellenar visualmente el slot
+      const slot = document.getElementById('answer-zone');
+      slot.textContent = num;
+      slot.style.borderColor = 'var(--color-orange)';
+      slot.style.background = '#fffbeb';
+
+      // Redibujar banco para esconder el número colocado
+      dibujarBurbujas();
+    }
+
+    // Sacar número del slot
+    function devolverBurbuja() {
+      if (placedNumber !== null) {
+        placedNumber = null;
+        MathAudio.playClick();
+
+        const slot = document.getElementById('answer-zone');
+        slot.textContent = "?";
+        slot.style.borderColor = "var(--color-blue)";
+        slot.style.background = "rgba(58, 183, 248, 0.05)";
+
+        dibujarBurbujas();
+      }
+    }
+
+    // Validar al final del desafío
+    function validarDesafio() {
+      const data = rounds[currentRoundIndex];
+
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      if (placedNumber === data.total) {
+        // Acierto!
+        MathAudio.playCorrect();
+        MathApp.lanzarConfeti();
+        MathApp.addScore(25); // +25 puntos
+
+        title.textContent = "¡Respuesta Correcta!";
+        title.className = "feedback-title success";
+        emoji.textContent = "🎈";
+        msg.textContent = data.successPhrase + " ¡Ganaste 25 puntos!";
+        feedback.style.display = 'flex';
+        MathAudio.speak(data.successPhrase);
+
+        nextBtn.onclick = () => {
+          currentRoundIndex++;
+          if (currentRoundIndex < rounds.length) {
+            cargarRonda();
+          } else {
+            // Completó todo el juego 5! Redirigir a final.html
+            document.getElementById('progress-bar').style.width = '100%';
+            redireccionFinal();
+          }
+        };
+
+      } else {
+        // Fallo!
+        MathAudio.playIncorrect();
+        
+        let errorMsg = "¡Oh! Esa respuesta es incorrecta. Vuelve a leer el problema y haz la operación con calma.";
+        if (placedNumber === null) {
+          errorMsg = "¡Debes arrastrar una burbuja con tu respuesta al casillero vacío antes de validar!";
+        }
+        MathAudio.speak(errorMsg);
+
+        // Sacudir tarjeta
+        const card = document.getElementById('problem-area');
+        card.classList.add('shake-element');
+        setTimeout(() => card.classList.remove('shake-element'), 500);
+      }
+    }
+
+    function redireccionFinal() {
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      MathApp.lanzarConfeti();
+      MathAudio.playWin();
+
+      title.textContent = "🔥 ¡DESAFÍO COMPLETADO! 🔥";
+      title.className = "feedback-title success";
+      emoji.textContent = "🏆";
+      
+      const finishedMsg = "¡Impresionante! Has resuelto todos los problemas del desafío final con gran éxito. ¡Vamos a ver tus estrellas!";
+      msg.textContent = finishedMsg;
+      
+      nextBtn.textContent = "Ver Resultados Finales ⭐⭐⭐";
+      feedback.style.display = 'flex';
+      MathAudio.speak(finishedMsg);
+
+      nextBtn.onclick = () => {
+        window.location.href = 'final.html';
+      };
+    }
+
+    function reiniciarRonda() {
+      devolverBurbuja();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarRonda();
+    });
+  </script>
+</body>
+</html>

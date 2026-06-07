@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canastas Matemáticas - Multiplicaciones</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header-bar">
+    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+    <div class="header-user-info">
+      <div class="header-profile">
+        <div id="header-avatar-container"></div>
+        <span class="header-username" id="header-username-val"></span>
+      </div>
+      <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="kids-card game-card">
+      <h1 class="kids-title text-purple">🧺 Canastas Matemáticas</h1>
+      
+      <div class="game-info-row">
+        <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <span class="round-indicator">✖️ Multiplicaciones</span>
+      </div>
+
+      <!-- Instrucción con voz -->
+      <div style="margin-bottom: 1.5rem; text-align: left;">
+        <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+          ¡A agrupar frutas! Coloca exactamente 3 naranjas en cada una de las 2 canastas, y luego elige el resultado de la multiplicación.
+        </span>
+      </div>
+
+      <!-- Zona de Trabajo -->
+      <div class="game-workspace">
+        
+        <!-- Origen de Frutas -->
+        <div>
+          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;" id="fruit-source-label">
+            🍊 Cajón de Naranjas (Haz clic o arrastra a las canastas):
+          </div>
+          <div class="drag-source-container" id="fruits-source-zone">
+            <!-- Se llena dinámicamente con frutas arrastrables -->
+          </div>
+        </div>
+
+        <!-- Canastas de Destino -->
+        <div style="margin-top: 1rem;">
+          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+            🧺 Canastas (Haz clic en una fruta dentro de la canasta para sacarla):
+          </div>
+          <div class="baskets-grid" id="baskets-zone">
+            <!-- Canastas dinámicas -->
+          </div>
+        </div>
+
+        <!-- Ecuación de Multiplicación -->
+        <div style="margin-top: 1rem; background: #faf5ff; border: 3px solid #f3e8ff; padding: 1rem; border-radius: 20px; text-align: center;">
+          <div class="problem-equation" style="justify-content: center;">
+            <span class="equation-part" id="eq-baskets-count">2</span>
+            <span class="equation-part">x</span>
+            <span class="equation-part" id="eq-fruits-per-basket">3</span>
+            <span class="equation-part">=</span>
+            <span class="answer-slot" id="eq-answer-slot" style="font-size: 1.5rem;">?</span>
+          </div>
+          
+          <div class="options-grid" id="options-container" style="margin-top: 1rem;">
+            <!-- Opciones de respuesta para elegir -->
+          </div>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-overlay" id="feedback-panel">
+          <div class="feedback-content">
+            <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+            <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
+            <p class="feedback-msg tts-text" id="feedback-msg">¡Multiplicación resuelta!</p>
+            <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Acciones de juego -->
+      <div class="game-actions">
+        <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+          🔄 Reiniciar Nivel
+        </button>
+        <button onclick="validarCanastas()" class="kids-btn kids-btn-orange">
+          Validar Canastas 🧺
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const rounds = [
+      {
+        basketsCount: 2,
+        fruitsPerBasket: 3,
+        total: 6,
+        fruitType: "naranja",
+        fruitName: "Naranja",
+        fruitLabel: "🍊 Cajón de Naranjas (Haz clic o arrastra a las canastas):",
+        fruitSvg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="28" fill="#ff7e40" stroke="#ea580c" stroke-width="3"/><circle cx="50" cy="55" r="25" fill="none" stroke="#ff9d66" stroke-width="2" stroke-dasharray="2 4"/><path d="M 50 27 C 48 18 56 12 58 14 C 60 16 54 22 51 27" stroke="#15803d" stroke-width="4" fill="#4ade80"/></svg>',
+        instruction: "¡A agrupar frutas! Coloca exactamente 3 naranjas en cada una de las 2 canastas, y luego elige el resultado de la multiplicación.",
+        options: [5, 6, 8]
+      },
+      {
+        basketsCount: 3,
+        fruitsPerBasket: 4,
+        total: 12,
+        fruitType: "manzana",
+        fruitName: "Manzana",
+        fruitLabel: "🍎 Cajón de Manzanas (Haz clic o arrastra a las canastas):",
+        fruitSvg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="26" fill="#f43f5e" stroke="#be123c" stroke-width="3"/><path d="M 50 29 C 48 18 56 12 58 14 C 60 16 54 22 51 29" stroke="#854d0e" stroke-width="4" fill="#4ade80"/><circle cx="50" cy="55" r="23" fill="none" stroke="#fb7185" stroke-width="2"/></svg>',
+        instruction: "¡A agrupar frutas! Coloca exactamente 4 manzanas rojas en cada una de las 3 canastas, y luego elige el resultado de la multiplicación.",
+        options: [9, 12, 15]
+      },
+      {
+        basketsCount: 4,
+        fruitsPerBasket: 2,
+        total: 8,
+        fruitType: "pera",
+        fruitName: "Pera",
+        fruitLabel: "🍐 Cajón de Peras (Haz clic o arrastra a las canastas):",
+        fruitSvg: '<svg viewBox="0 0 100 100"><path d="M 50 25 C 38 45 35 75 50 75 C 65 75 62 45 50 25" fill="#84cc16" stroke="#4d7c0f" stroke-width="3"/><path d="M 50 25 C 48 18 56 12 58 14 C 60 16 54 22 51 25" stroke="#15803d" stroke-width="3" fill="#22c55e"/></svg>',
+        instruction: "¡A agrupar frutas! Coloca exactamente 2 peras jugosas en cada una de las 4 canastas, y luego elige el resultado de la multiplicación.",
+        options: [6, 8, 10]
+      }
+    ];
+
+    let currentRoundIndex = 0;
+    let basketsData = []; // Matriz de arrays con las frutas por canasta
+    let selectedAnswer = null;
+
+    function cargarRonda() {
+      const data = rounds[currentRoundIndex];
+      selectedAnswer = null;
+      
+      // Inicializar canastas vacías
+      basketsData = [];
+      for (let i = 0; i < data.basketsCount; i++) {
+        basketsData.push([]);
+      }
+
+      // Actualizar encabezados
+      document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
+      document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
+      document.getElementById('fruit-source-label').textContent = data.fruitLabel;
+
+      const instr = document.getElementById('game-instruction');
+      instr.textContent = data.instruction;
+
+      // Vincular voz
+      const speakBtn = instr.nextElementSibling;
+      if (speakBtn) {
+        speakBtn.onclick = (e) => {
+          e.stopPropagation();
+          MathAudio.playClick();
+          MathAudio.speak(data.instruction, speakBtn);
+        };
+        MathAudio.speak(data.instruction, speakBtn);
+      }
+
+      // Dibujar cajón de frutas (infinitas)
+      const sourceZone = document.getElementById('fruits-source-zone');
+      sourceZone.innerHTML = '';
+      
+      // Creamos 6 frutas visibles para arrastrar
+      for (let i = 0; i < 6; i++) {
+        const item = document.createElement('div');
+        item.className = 'drag-item';
+        item.draggable = true;
+        item.style.border = '3px solid var(--color-purple)';
+        item.innerHTML = data.fruitSvg;
+        
+        item.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', 'fruit');
+        });
+
+        // Al hacer clic, se agrega automáticamente a la primera canasta incompleta
+        item.addEventListener('click', () => {
+          const firstIncompleteIdx = basketsData.findIndex(basket => basket.length < data.fruitsPerBasket);
+          const targetIdx = firstIncompleteIdx !== -1 ? firstIncompleteIdx : 0;
+          colocarEnCanasta(targetIdx);
+        });
+
+        sourceZone.appendChild(item);
+      }
+
+      // Configurar ecuación
+      document.getElementById('eq-baskets-count').textContent = data.basketsCount;
+      document.getElementById('eq-fruits-per-basket').textContent = data.fruitsPerBasket;
+      document.getElementById('eq-answer-slot').textContent = "?";
+      document.getElementById('eq-answer-slot').style.borderColor = "var(--color-blue)";
+      document.getElementById('eq-answer-slot').style.background = "rgba(58, 183, 248, 0.05)";
+
+      // Dibujar opciones
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      data.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'kids-btn kids-btn-blue';
+        btn.style.fontSize = '1.3rem';
+        btn.textContent = opt;
+        btn.onclick = () => elegirRespuesta(opt, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      // Dibujar canastas en blanco
+      actualizarCanastasVista();
+      document.getElementById('feedback-panel').style.display = 'none';
+    }
+
+    // Dibujar canastas
+    function actualizarCanastasVista() {
+      const data = rounds[currentRoundIndex];
+      const grid = document.getElementById('baskets-zone');
+      grid.innerHTML = '';
+
+      basketsData.forEach((basketItems, bIdx) => {
+        const basketBox = document.createElement('div');
+        basketBox.className = 'basket-box';
+        basketBox.setAttribute('data-index', bIdx);
+        
+        // Elemento Drop target
+        basketBox.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          basketBox.style.background = 'rgba(181, 95, 230, 0.15)';
+        });
+
+        basketBox.addEventListener('dragleave', () => {
+          basketBox.style.background = 'rgba(181, 95, 230, 0.05)';
+        });
+
+        basketBox.addEventListener('drop', (e) => {
+          e.preventDefault();
+          basketBox.style.background = 'rgba(181, 95, 230, 0.05)';
+          colocarEnCanasta(bIdx);
+        });
+
+        // Contenido visual de la canasta
+        const basketSvg = `
+          <div class="basket-svg-container">
+            <svg viewBox="0 0 120 80" style="width: 100%; height: 100%;">
+              <path d="M 10 20 Q 60 10 110 20 L 95 70 Q 60 80 25 70 Z" fill="#b45309" stroke="#78350f" stroke-width="4"/>
+              <path d="M 15 25 L 105 25" stroke="#78350f" stroke-width="2"/>
+              <path d="M 10 20 Q 60 -15 110 20" fill="none" stroke="#78350f" stroke-width="4"/>
+            </svg>
+          </div>
+        `;
+
+        const fruitsZone = document.createElement('div');
+        fruitsZone.className = 'basket-fruits-zone';
+        
+        // Dibujar las frutas dentro
+        basketItems.forEach((fr, fIdx) => {
+          const fruitIcon = document.createElement('div');
+          fruitIcon.style.width = '35px';
+          fruitIcon.style.height = '35px';
+          fruitIcon.style.cursor = 'pointer';
+          fruitIcon.innerHTML = data.fruitSvg;
+          fruitIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sacarDeCanasta(bIdx, fIdx);
+          });
+          fruitsZone.appendChild(fruitIcon);
+        });
+
+        // Etiqueta contador
+        const countLabel = document.createElement('div');
+        countLabel.style.fontWeight = '700';
+        countLabel.style.marginTop = '0.5rem';
+        countLabel.style.color = basketItems.length === data.fruitsPerBasket ? 'var(--color-green)' : 'var(--color-purple)';
+        countLabel.textContent = `Frutas: ${basketItems.length} / ${data.fruitsPerBasket}`;
+
+        basketBox.innerHTML = basketSvg;
+        basketBox.appendChild(fruitsZone);
+        basketBox.appendChild(countLabel);
+        grid.appendChild(basketBox);
+      });
+    }
+
+    // Colocar fruta en una canasta
+    function colocarEnCanasta(bIdx) {
+      const data = rounds[currentRoundIndex];
+      // Permitir poner más, pero la validación requiere el número exacto
+      basketsData[bIdx].push('fruit');
+      MathAudio.playClick();
+      actualizarCanastasVista();
+    }
+
+    // Quitar fruta
+    function sacarDeCanasta(bIdx, fIdx) {
+      basketsData[bIdx].splice(fIdx, 1);
+      MathAudio.playClick();
+      actualizarCanastasVista();
+    }
+
+    // Elegir respuesta de la multiplicación
+    function elegirRespuesta(val, btn) {
+      selectedAnswer = val;
+      document.querySelectorAll('#options-container button').forEach(b => {
+        b.className = 'kids-btn kids-btn-blue';
+      });
+      btn.className = 'kids-btn kids-btn-orange';
+      
+      const slot = document.getElementById('eq-answer-slot');
+      slot.textContent = val;
+      slot.style.borderColor = 'var(--color-orange)';
+      slot.style.background = '#fffbeb';
+      MathAudio.playClick();
+    }
+
+    // Validar al final del nivel
+    function validarCanastas() {
+      const data = rounds[currentRoundIndex];
+      
+      // Comprobar que cada canasta tenga exactamente la cantidad requerida
+      let canastasCorrectas = true;
+      for (let i = 0; i < basketsData.length; i++) {
+        if (basketsData[i].length !== data.fruitsPerBasket) {
+          canastasCorrectas = false;
+          break;
+        }
+      }
+
+      // Comprobar si la respuesta de multiplicación es correcta
+      const multiplicacionCorrecta = (selectedAnswer === data.total);
+
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      if (canastasCorrectas && multiplicacionCorrecta) {
+        // Acierto!
+        MathAudio.playCorrect();
+        MathApp.lanzarConfeti();
+        MathApp.addScore(15);
+
+        title.textContent = "¡Muy Bien!";
+        title.className = "feedback-title success";
+        emoji.textContent = "🍎";
+        
+        const successMsg = `¡Correcto! Pusiste ${data.fruitsPerBasket} frutas en cada una de las ${data.basketsCount} canastas. Y ${data.basketsCount} x ${data.fruitsPerBasket} es igual a ${data.total}. ¡Ganaste 15 puntos!`;
+        msg.textContent = successMsg;
+        feedback.style.display = 'flex';
+        MathAudio.speak(successMsg);
+
+        nextBtn.onclick = () => {
+          currentRoundIndex++;
+          if (currentRoundIndex < rounds.length) {
+            cargarRonda();
+          } else {
+            document.getElementById('progress-bar').style.width = '100%';
+            mostrarVictoriaNivelCompleto();
+          }
+        };
+
+      } else {
+        // Fallo!
+        MathAudio.playIncorrect();
+        
+        let errorMsg = "";
+        if (!canastasCorrectas && !multiplicacionCorrecta) {
+          errorMsg = "¡Las frutas en las canastas y el resultado no coinciden! Revisa ambos.";
+        } else if (!canastasCorrectas) {
+          errorMsg = `¡Revisa las canastas! Cada una debe tener exactamente ${data.fruitsPerBasket} frutas.`;
+        } else {
+          errorMsg = `¡Las canastas están perfectas! Pero el total de la multiplicación está incorrecto. Vuelve a contar todas las frutas.`;
+        }
+
+        MathAudio.speak(errorMsg);
+
+        // Sacudida
+        const workspace = document.querySelector('.game-workspace');
+        workspace.classList.add('shake-element');
+        setTimeout(() => workspace.classList.remove('shake-element'), 500);
+      }
+    }
+
+    function mostrarVictoriaNivelCompleto() {
+      const feedback = document.getElementById('feedback-panel');
+      const title = document.getElementById('feedback-title');
+      const msg = document.getElementById('feedback-msg');
+      const emoji = document.getElementById('feedback-emoji');
+      const nextBtn = document.getElementById('feedback-btn');
+
+      MathApp.lanzarConfeti();
+      MathAudio.playWin();
+
+      title.textContent = "¡Nivel Completado!";
+      title.className = "feedback-title success";
+      emoji.textContent = "🏆";
+      
+      const finishedMsg = "¡Genial! Multiplicaste agrupando frutas de forma espectacular. ¡Sigue así!";
+      msg.textContent = finishedMsg;
+      
+      nextBtn.textContent = "Siguiente Juego 🚀";
+      feedback.style.display = 'flex';
+      MathAudio.speak(finishedMsg);
+
+      nextBtn.onclick = () => {
+        window.location.href = 'juego3.html';
+      };
+    }
+
+    function reiniciarRonda() {
+      MathAudio.playClick();
+      cargarRonda();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarRonda();
+    });
+  </script>
+</body>
+</html>
