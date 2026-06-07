@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aventura Matemática - Bienvenida</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aventura Matemática - Bienvenida</title>
+<link rel="stylesheet" href="css/style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/logoo.png">
 </head>
-<body>
 
-  <header class="header-bar">
+<body>
+<header class="header-bar">
     <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
     <div class="header-user-info">
-      <div class="header-profile">
+    <div class="header-profile">
         <div id="header-avatar-container"></div>
         <span class="header-username" id="header-username-val"></span>
-      </div>
-      <div class="header-score" id="header-score-box">
-        ⭐ <span id="header-score-val">0</span>
-      </div>
     </div>
-  </header>
-
-  <main class="main-container">
+    <div class="header-score" id="header-score-box">
+        ⭐ <span id="header-score-val">0</span>
+    </div>
+    </div>
+</header>
+<main class="main-container">
     <div class="kids-card">
-      <div id="avatar-welcome-display" style="width: 150px; height: 150px; margin: 0 auto 1.5rem auto;"></div>
-      
-      <h1 class="kids-title">¡Hola, <span id="student-name-display" class="text-orange">Aventurero</span>!</h1>
-      
-      <p id="welcome-message-text" class="kids-subtitle tts-text tts-auto">
+    <div id="avatar-welcome-display" style="width: 150px; height: 150px; margin: 0 auto 1.5rem auto;"></div>
+    
+    <h1 class="kids-title">¡Hola, <span id="student-name-display" class="text-orange">Aventurero</span>!</h1>
+    
+    <p id="welcome-message-text" class="kids-subtitle tts-text tts-auto">
         ¡Te damos la bienvenida a tu Aventura Matemática! Prepárate para practicar sumas, restas, multiplicaciones y divisiones a través de divertidos juegos. ¿Estás listo para ganar muchos puntos?
-      </p>
-
-      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; margin-top: 2rem;">
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; margin-top: 2rem;">
         <a href="basico4.html" class="kids-btn kids-btn-green" style="width: 100%; max-width: 320px;">
-          Comenzar aventura matemática 🌟
+        Comenzar aventura matemática 🌟
         </a>
         <button onclick="MathApp.cerrarSesion()" class="kids-btn kids-btn-purple" style="width: 100%; max-width: 320px; font-size: 1.1rem; padding: 0.8rem 1.5rem;">
-          Cerrar sesión 🚪
+        Cerrar sesión 🚪
         </button>
-      </div>
     </div>
-  </main>
-
-  <script src="js/audio.js"></script>
-  <script src="js/main.js"></script>
-  <script>
+    </div>
+</main>
+<script src="js/audio.js"></script>
+<script src="js/main.js"></script>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Mostrar datos del estudiante
-      const nombre = localStorage.getItem('mat_nombre');
-      const avatar = localStorage.getItem('mat_avatar');
-
-      if (nombre) {
+    // Mostrar datos del estudiante
+    const nombre = localStorage.getItem('mat_nombre');
+    const avatar = localStorage.getItem('mat_avatar');
+    if (nombre) {
         document.getElementById('student-name-display').textContent = nombre;
-      }
-      if (avatar) {
+    }
+    if (avatar) {
         document.getElementById('avatar-welcome-display').innerHTML = MathApp.getAvatarSVG(avatar);
-      }
-
-      // Re-estructurar mensaje hablado para personalizarlo con el nombre del usuario
-      setTimeout(() => {
+    }
+    // Re-estructurar mensaje hablado para personalizarlo con el nombre del usuario
+    setTimeout(() => {
         const msg = `¡Hola ${nombre || ''}! Te damos la bienvenida a tu Aventura Matemática. Prepárate para practicar sumas, restas, multiplicaciones y divisiones a través de divertidos juegos. ¿Estás listo para ganar muchos puntos?`;
         
         // Buscamos el botón de parlante generado para actualizar su texto de lectura
@@ -68,16 +65,16 @@
         // Re-iniciar la vinculación del parlante
         const speakBtn = welcomeEl.nextElementSibling;
         if (speakBtn && speakBtn.classList.contains('tts-button')) {
-          speakBtn.onclick = (e) => {
+        speakBtn.onclick = (e) => {
             e.stopPropagation();
             MathAudio.playClick();
             MathAudio.speak(msg, speakBtn);
-          };
-          // Reproducir en voz alta de inmediato
-          MathAudio.speak(msg, speakBtn);
+        };
+        // Reproducir en voz alta de inmediato
+        MathAudio.speak(msg, speakBtn);
         }
-      }, 900);
+    }, 900);
     });
-  </script>
+</script>
 </body>
 </html>

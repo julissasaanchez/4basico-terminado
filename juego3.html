@@ -1,467 +1,470 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Repartiendo Objetos - Divisiones</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repartiendo Objetos - Divisiones</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/logoo.png">
 
-  <header class="header-bar">
-    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
-    <div class="header-user-info">
-      <div class="header-profile">
-        <div id="header-avatar-container"></div>
-        <span class="header-username" id="header-username-val"></span>
-      </div>
-      <div class="header-score" id="header-score-box">
-        ⭐ <span id="header-score-val">0</span>
-      </div>
-    </div>
-  </header>
+    </head>
+    <body>
 
-  <main class="main-container">
-    <div class="kids-card game-card">
-      <h1 class="kids-title text-blue">🍬 Repartiendo Objetos</h1>
-      
-      <div class="game-info-row">
-        <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
-        <div class="progress-bar-container">
-          <div class="progress-bar-fill" id="progress-bar"></div>
+    <header class="header-bar">
+        <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+        <div class="header-user-info">
+        <div class="header-profile">
+            <div id="header-avatar-container"></div>
+            <span class="header-username" id="header-username-val"></span>
         </div>
-        <span class="round-indicator">➗ Divisiones</span>
-      </div>
+        <div class="header-score" id="header-score-box">
+            ⭐ <span id="header-score-val">0</span>
+        </div>
+        </div>
+    </header>
 
-      <!-- Instrucción con voz -->
-      <div style="margin-bottom: 1.5rem; text-align: left;">
-        <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
-          ¡Reparto equitativo! Reparte 8 chocolates entre los 2 niños en partes iguales. Arrastra los chocolates a sus platos y elige el resultado.
-        </span>
-      </div>
-
-      <!-- Zona de Trabajo -->
-      <div class="game-workspace">
+    <main class="main-container">
+        <div class="kids-card game-card">
+        <h1 class="kids-title text-blue">🍬 Repartiendo Objetos</h1>
         
-        <!-- Pila de Dulces (Origen) -->
-        <div>
-          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;" id="candies-source-label">
-            🍫 Chocolates para repartir (Haz clic o arrastra a los platos):
-          </div>
-          <div class="drag-source-container" id="candies-source-zone" style="min-height: 80px;">
-            <!-- Dulces creados dinámicamente -->
-          </div>
+        <div class="game-info-row">
+            <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
+            <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+            <span class="round-indicator">➗ Divisiones</span>
         </div>
 
-        <!-- Niños / Platos (Destino) -->
-        <div style="margin-top: 1rem;">
-          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
-            🧒 Platos de los niños (Haz clic en un dulce para devolverlo):
-          </div>
-          <div class="kids-plates-grid" id="plates-zone">
-            <!-- Platos dinámicos -->
-          </div>
+        <!-- Instrucción con voz -->
+        <div style="margin-bottom: 1.5rem; text-align: left;">
+            <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+            ¡Reparto equitativo! Reparte 8 chocolates entre los 2 niños en partes iguales. Arrastra los chocolates a sus platos y elige el resultado.
+            </span>
         </div>
 
-        <!-- Ecuación de División -->
-        <div style="margin-top: 1.5rem; background: #eff6ff; border: 3px solid #dbeafe; padding: 1rem; border-radius: 20px; text-align: center;">
-          <div class="problem-equation" style="justify-content: center;">
-            <span class="equation-part" id="eq-candies-count">8</span>
-            <span class="equation-part">÷</span>
-            <span class="equation-part" id="eq-kids-count">2</span>
-            <span class="equation-part">=</span>
-            <span class="answer-slot" id="eq-answer-slot" style="font-size: 1.5rem;">?</span>
-          </div>
-          
-          <div class="options-grid" id="options-container" style="margin-top: 1rem;">
-            <!-- Botones de opciones -->
-          </div>
+        <!-- Zona de Trabajo -->
+        <div class="game-workspace">
+            
+            <!-- Pila de Dulces (Origen) -->
+            <div>
+            <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;" id="candies-source-label">
+                🍫 Chocolates para repartir (Haz clic o arrastra a los platos):
+            </div>
+            <div class="drag-source-container" id="candies-source-zone" style="min-height: 80px;">
+                <!-- Dulces creados dinámicamente -->
+            </div>
+            </div>
+
+            <!-- Niños / Platos (Destino) -->
+            <div style="margin-top: 1rem;">
+            <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+                🧒 Platos de los niños (Haz clic en un dulce para devolverlo):
+            </div>
+            <div class="kids-plates-grid" id="plates-zone">
+                <!-- Platos dinámicos -->
+            </div>
+            </div>
+
+            <!-- Ecuación de División -->
+            <div style="margin-top: 1.5rem; background: #eff6ff; border: 3px solid #dbeafe; padding: 1rem; border-radius: 20px; text-align: center;">
+            <div class="problem-equation" style="justify-content: center;">
+                <span class="equation-part" id="eq-candies-count">8</span>
+                <span class="equation-part">÷</span>
+                <span class="equation-part" id="eq-kids-count">2</span>
+                <span class="equation-part">=</span>
+                <span class="answer-slot" id="eq-answer-slot" style="font-size: 1.5rem;">?</span>
+            </div>
+            
+            <div class="options-grid" id="options-container" style="margin-top: 1rem;">
+                <!-- Botones de opciones -->
+            </div>
+            </div>
+
+            <!-- Feedback Overlay -->
+            <div class="feedback-overlay" id="feedback-panel">
+            <div class="feedback-content">
+                <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+                <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
+                <p class="feedback-msg tts-text" id="feedback-msg">¡Reparto perfecto!</p>
+                <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
+            </div>
+            </div>
+
         </div>
 
-        <!-- Feedback Overlay -->
-        <div class="feedback-overlay" id="feedback-panel">
-          <div class="feedback-content">
-            <span class="feedback-emoji" id="feedback-emoji">🎉</span>
-            <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
-            <p class="feedback-msg tts-text" id="feedback-msg">¡Reparto perfecto!</p>
-            <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
-          </div>
+        <!-- Acciones de juego -->
+        <div class="game-actions">
+            <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+            🔄 Reiniciar Nivel
+            </button>
+            <button onclick="validarReparto()" class="kids-btn kids-btn-orange">
+            Validar Reparto 🍬
+            </button>
         </div>
 
-      </div>
+        </div>
+    </main>
 
-      <!-- Acciones de juego -->
-      <div class="game-actions">
-        <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
-          🔄 Reiniciar Nivel
-        </button>
-        <button onclick="validarReparto()" class="kids-btn kids-btn-orange">
-          Validar Reparto 🍬
-        </button>
-      </div>
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        const rounds = [
+        {
+            totalCandies: 8,
+            kidsCount: 2,
+            result: 4,
+            candyType: "chocolate",
+            candyName: "Chocolate",
+            candyLabel: "🍫 Chocolates para repartir (Haz clic o arrastra a los platos):",
+            candySvg: '<svg viewBox="0 0 100 100"><rect x="25" y="30" width="50" height="40" rx="4" fill="#7c2d12" stroke="#451a03" stroke-width="3"/><path d="M 35 30 L 35 70 M 45 30 L 45 70 M 55 30 L 55 70 M 65 30 L 65 70 M 25 50 L 75 50" stroke="#451a03" stroke-width="2"/></svg>',
+            instruction: "¡Reparto equitativo! Reparte 8 chocolates deliciosos entre los 2 niños en partes iguales. Arrastra los chocolates a sus platos y elige el resultado.",
+            options: [3, 4, 5],
+            kidsAvatars: [
+            // Niño 1
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            // Niño 2
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fda4af"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>'
+            ]
+        },
+        {
+            totalCandies: 12,
+            kidsCount: 3,
+            result: 4,
+            candyType: "caramelo",
+            candyName: "Caramelo",
+            candyLabel: "🍬 Caramelos para repartir (Haz clic o arrastra a los platos):",
+            candySvg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/><polygon points="20,35 35,50 20,65" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/><polygon points="80,35 65,50 80,65" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/><circle cx="50" cy="50" r="15" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 3"/></svg>',
+            instruction: "¡Reparto equitativo! Reparte 12 caramelos morados entre los 3 niños en partes iguales. Arrastra los caramelos a sus platos y elige el resultado.",
+            options: [3, 4, 6],
+            kidsAvatars: [
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fda4af"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#67e8f9"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>'
+            ]
+        },
+        {
+            totalCandies: 15,
+            kidsCount: 5,
+            result: 3,
+            candyType: "galleta",
+            candyName: "Galleta",
+            candyLabel: "🍪 Galletas para repartir (Haz clic o arrastra a los platos):",
+            candySvg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="28" fill="#d97706" stroke="#78350f" stroke-width="3"/><circle cx="40" cy="40" r="3" fill="#451a03"/><circle cx="60" cy="42" r="3.5" fill="#451a03"/><circle cx="48" cy="58" r="4" fill="#451a03"/><circle cx="62" cy="58" r="3" fill="#451a03"/><circle cx="36" cy="56" r="3" fill="#451a03"/></svg>',
+            instruction: "¡Reparto equitativo! Reparte 15 galletas con chispas de chocolate entre los 5 niños en partes iguales. Arrastra las galletas a sus platos y elige el resultado.",
+            options: [3, 4, 5],
+            kidsAvatars: [
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fda4af"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#67e8f9"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#86efac"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
+            '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#c084fc"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>'
+            ]
+        }
+        ];
 
-    </div>
-  </main>
+        let currentRoundIndex = 0;
+        let candiesInPileCount = 0;
+        let platesData = []; // Matriz conteniendo número de dulces por plato
+        let selectedAnswer = null;
 
-  <script src="js/audio.js"></script>
-  <script src="js/main.js"></script>
-  <script>
-    const rounds = [
-      {
-        totalCandies: 8,
-        kidsCount: 2,
-        result: 4,
-        candyType: "chocolate",
-        candyName: "Chocolate",
-        candyLabel: "🍫 Chocolates para repartir (Haz clic o arrastra a los platos):",
-        candySvg: '<svg viewBox="0 0 100 100"><rect x="25" y="30" width="50" height="40" rx="4" fill="#7c2d12" stroke="#451a03" stroke-width="3"/><path d="M 35 30 L 35 70 M 45 30 L 45 70 M 55 30 L 55 70 M 65 30 L 65 70 M 25 50 L 75 50" stroke="#451a03" stroke-width="2"/></svg>',
-        instruction: "¡Reparto equitativo! Reparte 8 chocolates deliciosos entre los 2 niños en partes iguales. Arrastra los chocolates a sus platos y elige el resultado.",
-        options: [3, 4, 5],
-        kidsAvatars: [
-          // Niño 1
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          // Niño 2
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fda4af"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>'
-        ]
-      },
-      {
-        totalCandies: 12,
-        kidsCount: 3,
-        result: 4,
-        candyType: "caramelo",
-        candyName: "Caramelo",
-        candyLabel: "🍬 Caramelos para repartir (Haz clic o arrastra a los platos):",
-        candySvg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/><polygon points="20,35 35,50 20,65" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/><polygon points="80,35 65,50 80,65" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/><circle cx="50" cy="50" r="15" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 3"/></svg>',
-        instruction: "¡Reparto equitativo! Reparte 12 caramelos morados entre los 3 niños en partes iguales. Arrastra los caramelos a sus platos y elige el resultado.",
-        options: [3, 4, 6],
-        kidsAvatars: [
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fda4af"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#67e8f9"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>'
-        ]
-      },
-      {
-        totalCandies: 15,
-        kidsCount: 5,
-        result: 3,
-        candyType: "galleta",
-        candyName: "Galleta",
-        candyLabel: "🍪 Galletas para repartir (Haz clic o arrastra a los platos):",
-        candySvg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="28" fill="#d97706" stroke="#78350f" stroke-width="3"/><circle cx="40" cy="40" r="3" fill="#451a03"/><circle cx="60" cy="42" r="3.5" fill="#451a03"/><circle cx="48" cy="58" r="4" fill="#451a03"/><circle cx="62" cy="58" r="3" fill="#451a03"/><circle cx="36" cy="56" r="3" fill="#451a03"/></svg>',
-        instruction: "¡Reparto equitativo! Reparte 15 galletas con chispas de chocolate entre los 5 niños en partes iguales. Arrastra las galletas a sus platos y elige el resultado.",
-        options: [3, 4, 5],
-        kidsAvatars: [
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#fda4af"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#67e8f9"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#86efac"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 70 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>',
-          '<svg viewBox="0 0 100 100" class="plate-avatar"><circle cx="50" cy="50" r="45" fill="#c084fc"/><circle cx="35" cy="45" r="4" fill="#000"/><circle cx="65" cy="45" r="4" fill="#000"/><path d="M 35 60 Q 50 75 65 60" stroke="#000" stroke-width="4" fill="none"/></svg>'
-        ]
-      }
-    ];
-
-    let currentRoundIndex = 0;
-    let candiesInPileCount = 0;
-    let platesData = []; // Matriz conteniendo número de dulces por plato
-    let selectedAnswer = null;
-
-    function cargarRonda() {
-      const data = rounds[currentRoundIndex];
-      selectedAnswer = null;
-      candiesInPileCount = data.totalCandies;
-      
-      // Platos vacíos
-      platesData = [];
-      for (let i = 0; i < data.kidsCount; i++) {
-        platesData.push(0);
-      }
-
-      // Actualizar cabeceras e instrucciones
-      document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
-      document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
-      document.getElementById('candies-source-label').textContent = data.candyLabel;
-
-      const instr = document.getElementById('game-instruction');
-      instr.textContent = data.instruction;
-
-      // Vincular voz
-      const speakBtn = instr.nextElementSibling;
-      if (speakBtn) {
-        speakBtn.onclick = (e) => {
-          e.stopPropagation();
-          MathAudio.playClick();
-          MathAudio.speak(data.instruction, speakBtn);
-        };
-        MathAudio.speak(data.instruction, speakBtn);
-      }
-
-      // Ecuación
-      document.getElementById('eq-candies-count').textContent = data.totalCandies;
-      document.getElementById('eq-kids-count').textContent = data.kidsCount;
-      document.getElementById('eq-answer-slot').textContent = "?";
-      document.getElementById('eq-answer-slot').style.borderColor = "var(--color-blue)";
-      document.getElementById('eq-answer-slot').style.background = "rgba(58, 183, 248, 0.05)";
-
-      // Cargar opciones
-      const optionsContainer = document.getElementById('options-container');
-      optionsContainer.innerHTML = '';
-      data.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'kids-btn kids-btn-blue';
-        btn.style.fontSize = '1.3rem';
-        btn.textContent = opt;
-        btn.onclick = () => elegirRespuesta(opt, btn);
-        optionsContainer.appendChild(btn);
-      });
-
-      // Dibujar pila de dulces
-      actualizarPilaVista();
-      
-      // Dibujar platos vacíos
-      actualizarPlatosVista();
-      
-      document.getElementById('feedback-panel').style.display = 'none';
-    }
-
-    // Dibujar dulces en el contenedor de origen
-    function actualizarPilaVista() {
-      const data = rounds[currentRoundIndex];
-      const zone = document.getElementById('candies-source-zone');
-      zone.innerHTML = '';
-
-      for (let i = 0; i < candiesInPileCount; i++) {
-        const item = document.createElement('div');
-        item.className = 'drag-item';
-        item.draggable = true;
-        item.style.border = '3px solid var(--color-blue)';
-        item.style.width = '60px';
-        item.style.padding = '0.3rem';
-        item.innerHTML = data.candySvg;
-
-        item.addEventListener('dragstart', (e) => {
-          e.dataTransfer.setData('text/plain', 'candy');
-        });
-
-        // Click: reparte al plato con menos dulces
-        item.addEventListener('click', () => {
-          let minIdx = 0;
-          let minVal = platesData[0];
-          platesData.forEach((val, idx) => {
-            if (val < minVal) {
-              minVal = val;
-              minIdx = idx;
-            }
-          });
-          repartirAPlato(minIdx);
-        });
-
-        zone.appendChild(item);
-      }
-    }
-
-    // Dibujar platos de niños
-    function actualizarPlatosVista() {
-      const data = rounds[currentRoundIndex];
-      const zone = document.getElementById('plates-zone');
-      zone.innerHTML = '';
-
-      platesData.forEach((count, pIdx) => {
-        const plateBox = document.createElement('div');
-        plateBox.className = 'plate-box';
-        plateBox.setAttribute('data-index', pIdx);
-
-        // Drag handlers
-        plateBox.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          plateBox.style.background = 'rgba(58, 183, 248, 0.15)';
-        });
-
-        plateBox.addEventListener('dragleave', () => {
-          plateBox.style.background = 'rgba(58, 183, 248, 0.05)';
-        });
-
-        plateBox.addEventListener('drop', (e) => {
-          e.preventDefault();
-          plateBox.style.background = 'rgba(58, 183, 248, 0.05)';
-          repartirAPlato(pIdx);
-        });
-
-        // Plato visual dropzone
-        const plateDropzone = document.createElement('div');
-        plateDropzone.className = 'plate-dropzone';
+        function cargarRonda() {
+        const data = rounds[currentRoundIndex];
+        selectedAnswer = null;
+        candiesInPileCount = data.totalCandies;
         
-        // Agregar los dulces que tiene este plato
-        for (let i = 0; i < count; i++) {
-          const candyEl = document.createElement('div');
-          candyEl.style.width = '28px';
-          candyEl.style.height = '28px';
-          candyEl.style.cursor = 'pointer';
-          candyEl.innerHTML = data.candySvg;
-          candyEl.addEventListener('click', (e) => {
+        // Platos vacíos
+        platesData = [];
+        for (let i = 0; i < data.kidsCount; i++) {
+            platesData.push(0);
+        }
+
+        // Actualizar cabeceras e instrucciones
+        document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
+        document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
+        document.getElementById('candies-source-label').textContent = data.candyLabel;
+
+        const instr = document.getElementById('game-instruction');
+        instr.textContent = data.instruction;
+
+        // Vincular voz
+        const speakBtn = instr.nextElementSibling;
+        if (speakBtn) {
+            speakBtn.onclick = (e) => {
             e.stopPropagation();
-            devolverAPila(pIdx);
-          });
-          plateDropzone.appendChild(candyEl);
+            MathAudio.playClick();
+            MathAudio.speak(data.instruction, speakBtn);
+            };
+            MathAudio.speak(data.instruction, speakBtn);
         }
 
-        const countLabel = document.createElement('div');
-        countLabel.style.fontWeight = '700';
-        countLabel.style.fontSize = '0.95rem';
-        countLabel.style.marginTop = '0.3rem';
-        countLabel.style.color = 'var(--color-blue)';
-        countLabel.textContent = `Tiene: ${count}`;
+        // Ecuación
+        document.getElementById('eq-candies-count').textContent = data.totalCandies;
+        document.getElementById('eq-kids-count').textContent = data.kidsCount;
+        document.getElementById('eq-answer-slot').textContent = "?";
+        document.getElementById('eq-answer-slot').style.borderColor = "var(--color-blue)";
+        document.getElementById('eq-answer-slot').style.background = "rgba(58, 183, 248, 0.05)";
 
-        plateBox.innerHTML = data.kidsAvatars[pIdx];
-        plateBox.appendChild(plateDropzone);
-        plateBox.appendChild(countLabel);
-        zone.appendChild(plateBox);
-      });
-    }
+        // Cargar opciones
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        data.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'kids-btn kids-btn-blue';
+            btn.style.fontSize = '1.3rem';
+            btn.textContent = opt;
+            btn.onclick = () => elegirRespuesta(opt, btn);
+            optionsContainer.appendChild(btn);
+        });
 
-    // Mover un dulce de la pila al plato
-    function repartirAPlato(pIdx) {
-      if (candiesInPileCount > 0) {
-        candiesInPileCount--;
-        platesData[pIdx]++;
-        MathAudio.playClick();
+        // Dibujar pila de dulces
         actualizarPilaVista();
+        
+        // Dibujar platos vacíos
         actualizarPlatosVista();
-      }
-    }
-
-    // Devolver un dulce del plato a la pila
-    function devolverAPila(pIdx) {
-      if (platesData[pIdx] > 0) {
-        platesData[pIdx]--;
-        candiesInPileCount++;
-        MathAudio.playClick();
-        actualizarPilaVista();
-        actualizarPlatosVista();
-      }
-    }
-
-    // Elegir respuesta de la ecuación
-    function elegirRespuesta(val, btn) {
-      selectedAnswer = val;
-      document.querySelectorAll('#options-container button').forEach(b => {
-        b.className = 'kids-btn kids-btn-blue';
-      });
-      btn.className = 'kids-btn kids-btn-orange';
-
-      const slot = document.getElementById('eq-answer-slot');
-      slot.textContent = val;
-      slot.style.borderColor = 'var(--color-orange)';
-      slot.style.background = '#fffbeb';
-      MathAudio.playClick();
-    }
-
-    // Validar reparto final
-    function validarReparto() {
-      const data = rounds[currentRoundIndex];
-
-      // 1. Verificar si queda algún dulce sin repartir en la pila
-      const pilaVacia = (candiesInPileCount === 0);
-
-      // 2. Verificar que todos los platos tengan exactamente la misma cantidad y coincida con el resultado de la división
-      let repartoEquitativo = true;
-      const primerPlatoVal = platesData[0];
-      
-      platesData.forEach(val => {
-        if (val !== primerPlatoVal || val !== data.result) {
-          repartoEquitativo = false;
+        
+        document.getElementById('feedback-panel').style.display = 'none';
         }
-      });
 
-      // 3. Verificar la respuesta seleccionada
-      const ecuacionCorrecta = (selectedAnswer === data.result);
+        // Dibujar dulces en el contenedor de origen
+        function actualizarPilaVista() {
+        const data = rounds[currentRoundIndex];
+        const zone = document.getElementById('candies-source-zone');
+        zone.innerHTML = '';
 
-      const feedback = document.getElementById('feedback-panel');
-      const title = document.getElementById('feedback-title');
-      const msg = document.getElementById('feedback-msg');
-      const emoji = document.getElementById('feedback-emoji');
-      const nextBtn = document.getElementById('feedback-btn');
+        for (let i = 0; i < candiesInPileCount; i++) {
+            const item = document.createElement('div');
+            item.className = 'drag-item';
+            item.draggable = true;
+            item.style.border = '3px solid var(--color-blue)';
+            item.style.width = '60px';
+            item.style.padding = '0.3rem';
+            item.innerHTML = data.candySvg;
 
-      if (pilaVacia && repartoEquitativo && ecuacionCorrecta) {
-        // Acierto!
-        MathAudio.playCorrect();
+            item.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', 'candy');
+            });
+
+            // Click: reparte al plato con menos dulces
+            item.addEventListener('click', () => {
+            let minIdx = 0;
+            let minVal = platesData[0];
+            platesData.forEach((val, idx) => {
+                if (val < minVal) {
+                minVal = val;
+                minIdx = idx;
+                }
+            });
+            repartirAPlato(minIdx);
+            });
+
+            zone.appendChild(item);
+        }
+        }
+
+        // Dibujar platos de niños
+        function actualizarPlatosVista() {
+        const data = rounds[currentRoundIndex];
+        const zone = document.getElementById('plates-zone');
+        zone.innerHTML = '';
+
+        platesData.forEach((count, pIdx) => {
+            const plateBox = document.createElement('div');
+            plateBox.className = 'plate-box';
+            plateBox.setAttribute('data-index', pIdx);
+
+            // Drag handlers
+            plateBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            plateBox.style.background = 'rgba(58, 183, 248, 0.15)';
+            });
+
+            plateBox.addEventListener('dragleave', () => {
+            plateBox.style.background = 'rgba(58, 183, 248, 0.05)';
+            });
+
+            plateBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            plateBox.style.background = 'rgba(58, 183, 248, 0.05)';
+            repartirAPlato(pIdx);
+            });
+
+            // Plato visual dropzone
+            const plateDropzone = document.createElement('div');
+            plateDropzone.className = 'plate-dropzone';
+            
+            // Agregar los dulces que tiene este plato
+            for (let i = 0; i < count; i++) {
+            const candyEl = document.createElement('div');
+            candyEl.style.width = '28px';
+            candyEl.style.height = '28px';
+            candyEl.style.cursor = 'pointer';
+            candyEl.innerHTML = data.candySvg;
+            candyEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                devolverAPila(pIdx);
+            });
+            plateDropzone.appendChild(candyEl);
+            }
+
+            const countLabel = document.createElement('div');
+            countLabel.style.fontWeight = '700';
+            countLabel.style.fontSize = '0.95rem';
+            countLabel.style.marginTop = '0.3rem';
+            countLabel.style.color = 'var(--color-blue)';
+            countLabel.textContent = `Tiene: ${count}`;
+
+            plateBox.innerHTML = data.kidsAvatars[pIdx];
+            plateBox.appendChild(plateDropzone);
+            plateBox.appendChild(countLabel);
+            zone.appendChild(plateBox);
+        });
+        }
+
+        // Mover un dulce de la pila al plato
+        function repartirAPlato(pIdx) {
+        if (candiesInPileCount > 0) {
+            candiesInPileCount--;
+            platesData[pIdx]++;
+            MathAudio.playClick();
+            actualizarPilaVista();
+            actualizarPlatosVista();
+        }
+        }
+
+        // Devolver un dulce del plato a la pila
+        function devolverAPila(pIdx) {
+        if (platesData[pIdx] > 0) {
+            platesData[pIdx]--;
+            candiesInPileCount++;
+            MathAudio.playClick();
+            actualizarPilaVista();
+            actualizarPlatosVista();
+        }
+        }
+
+        // Elegir respuesta de la ecuación
+        function elegirRespuesta(val, btn) {
+        selectedAnswer = val;
+        document.querySelectorAll('#options-container button').forEach(b => {
+            b.className = 'kids-btn kids-btn-blue';
+        });
+        btn.className = 'kids-btn kids-btn-orange';
+
+        const slot = document.getElementById('eq-answer-slot');
+        slot.textContent = val;
+        slot.style.borderColor = 'var(--color-orange)';
+        slot.style.background = '#fffbeb';
+        MathAudio.playClick();
+        }
+
+        // Validar reparto final
+        function validarReparto() {
+        const data = rounds[currentRoundIndex];
+
+        // 1. Verificar si queda algún dulce sin repartir en la pila
+        const pilaVacia = (candiesInPileCount === 0);
+
+        // 2. Verificar que todos los platos tengan exactamente la misma cantidad y coincida con el resultado de la división
+        let repartoEquitativo = true;
+        const primerPlatoVal = platesData[0];
+        
+        platesData.forEach(val => {
+            if (val !== primerPlatoVal || val !== data.result) {
+            repartoEquitativo = false;
+            }
+        });
+
+        // 3. Verificar la respuesta seleccionada
+        const ecuacionCorrecta = (selectedAnswer === data.result);
+
+        const feedback = document.getElementById('feedback-panel');
+        const title = document.getElementById('feedback-title');
+        const msg = document.getElementById('feedback-msg');
+        const emoji = document.getElementById('feedback-emoji');
+        const nextBtn = document.getElementById('feedback-btn');
+
+        if (pilaVacia && repartoEquitativo && ecuacionCorrecta) {
+            // Acierto!
+            MathAudio.playCorrect();
+            MathApp.lanzarConfeti();
+            MathApp.addScore(15);
+
+            title.textContent = "¡Reparto Perfecto!";
+            title.className = "feedback-title success";
+            emoji.textContent = "🍬";
+
+            const successMsg = `¡Extraordinario! Repartiste los ${data.totalCandies} dulces de manera justa: cada niño recibió ${data.result} dulces. Y ${data.totalCandies} ÷ ${data.kidsCount} es igual a ${data.result}. ¡Ganaste 15 puntos!`;
+            msg.textContent = successMsg;
+            feedback.style.display = 'flex';
+            MathAudio.speak(successMsg);
+
+            nextBtn.onclick = () => {
+            currentRoundIndex++;
+            if (currentRoundIndex < rounds.length) {
+                cargarRonda();
+            } else {
+                document.getElementById('progress-bar').style.width = '100%';
+                mostrarVictoriaNivelCompleto();
+            }
+            };
+
+        } else {
+            // Fallo!
+            MathAudio.playIncorrect();
+
+            let errorMsg = "";
+            if (candiesInPileCount > 0) {
+            errorMsg = "¡Todavía quedan dulces en el cajón! Tienes que repartirlos todos.";
+            } else if (!repartoEquitativo) {
+            errorMsg = `¡El reparto no es justo! Recuerda que todos los niños deben recibir la misma cantidad: exactamente ${data.result} dulces cada uno.`;
+            } else {
+            errorMsg = `¡Repartiste muy bien los dulces! Pero el resultado de la división que seleccionaste está incorrecto. Revisa el total por niño.`;
+            }
+
+            MathAudio.speak(errorMsg);
+
+            // Sacudida visual
+            const workspace = document.querySelector('.game-workspace');
+            workspace.classList.add('shake-element');
+            setTimeout(() => workspace.classList.remove('shake-element'), 500);
+        }
+        }
+
+        function mostrarVictoriaNivelCompleto() {
+        const feedback = document.getElementById('feedback-panel');
+        const title = document.getElementById('feedback-title');
+        const msg = document.getElementById('feedback-msg');
+        const emoji = document.getElementById('feedback-emoji');
+        const nextBtn = document.getElementById('feedback-btn');
+
         MathApp.lanzarConfeti();
-        MathApp.addScore(15);
+        MathAudio.playWin();
 
-        title.textContent = "¡Reparto Perfecto!";
+        title.textContent = "¡Nivel Completado!";
         title.className = "feedback-title success";
-        emoji.textContent = "🍬";
+        emoji.textContent = "🏆";
 
-        const successMsg = `¡Extraordinario! Repartiste los ${data.totalCandies} dulces de manera justa: cada niño recibió ${data.result} dulces. Y ${data.totalCandies} ÷ ${data.kidsCount} es igual a ${data.result}. ¡Ganaste 15 puntos!`;
-        msg.textContent = successMsg;
+        const finishedMsg = "¡Fabuloso! Repartiste dulces equitativamente en todas las rondas. ¡Eres un maestro de la división!";
+        msg.textContent = finishedMsg;
+
+        nextBtn.textContent = "Siguiente Juego 🚀";
         feedback.style.display = 'flex';
-        MathAudio.speak(successMsg);
+        MathAudio.speak(finishedMsg);
 
         nextBtn.onclick = () => {
-          currentRoundIndex++;
-          if (currentRoundIndex < rounds.length) {
-            cargarRonda();
-          } else {
-            document.getElementById('progress-bar').style.width = '100%';
-            mostrarVictoriaNivelCompleto();
-          }
+            window.location.href = 'juego4.html';
         };
-
-      } else {
-        // Fallo!
-        MathAudio.playIncorrect();
-
-        let errorMsg = "";
-        if (candiesInPileCount > 0) {
-          errorMsg = "¡Todavía quedan dulces en el cajón! Tienes que repartirlos todos.";
-        } else if (!repartoEquitativo) {
-          errorMsg = `¡El reparto no es justo! Recuerda que todos los niños deben recibir la misma cantidad: exactamente ${data.result} dulces cada uno.`;
-        } else {
-          errorMsg = `¡Repartiste muy bien los dulces! Pero el resultado de la división que seleccionaste está incorrecto. Revisa el total por niño.`;
         }
 
-        MathAudio.speak(errorMsg);
+        function reiniciarRonda() {
+        MathAudio.playClick();
+        cargarRonda();
+        }
 
-        // Sacudida visual
-        const workspace = document.querySelector('.game-workspace');
-        workspace.classList.add('shake-element');
-        setTimeout(() => workspace.classList.remove('shake-element'), 500);
-      }
-    }
-
-    function mostrarVictoriaNivelCompleto() {
-      const feedback = document.getElementById('feedback-panel');
-      const title = document.getElementById('feedback-title');
-      const msg = document.getElementById('feedback-msg');
-      const emoji = document.getElementById('feedback-emoji');
-      const nextBtn = document.getElementById('feedback-btn');
-
-      MathApp.lanzarConfeti();
-      MathAudio.playWin();
-
-      title.textContent = "¡Nivel Completado!";
-      title.className = "feedback-title success";
-      emoji.textContent = "🏆";
-
-      const finishedMsg = "¡Fabuloso! Repartiste dulces equitativamente en todas las rondas. ¡Eres un maestro de la división!";
-      msg.textContent = finishedMsg;
-
-      nextBtn.textContent = "Siguiente Juego 🚀";
-      feedback.style.display = 'flex';
-      MathAudio.speak(finishedMsg);
-
-      nextBtn.onclick = () => {
-        window.location.href = 'juego4.html';
-      };
-    }
-
-    function reiniciarRonda() {
-      MathAudio.playClick();
-      cargarRonda();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      cargarRonda();
-    });
-  </script>
-</body>
+        document.addEventListener('DOMContentLoaded', () => {
+        cargarRonda();
+        });
+    </script>
+    </body>
 </html>

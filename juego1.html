@@ -1,320 +1,323 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El Vuelto Correcto - Restas</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Vuelto Correcto - Restas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/logoo.png">
 
-  <header class="header-bar">
-    <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
-    <div class="header-user-info">
-      <div class="header-profile">
-        <div id="header-avatar-container"></div>
-        <span class="header-username" id="header-username-val"></span>
-      </div>
-      <div class="header-score" id="header-score-box">
-        ⭐ <span id="header-score-val">0</span>
-      </div>
-    </div>
-  </header>
+    </head>
+    <body>
 
-  <main class="main-container">
-    <div class="kids-card game-card">
-      <h1 class="kids-title text-blue">💰 El Vuelto Correcto</h1>
-      
-      <div class="game-info-row">
-        <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
-        <div class="progress-bar-container">
-          <div class="progress-bar-fill" id="progress-bar"></div>
+    <header class="header-bar">
+        <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+        <div class="header-user-info">
+        <div class="header-profile">
+            <div id="header-avatar-container"></div>
+            <span class="header-username" id="header-username-val"></span>
         </div>
-        <span class="round-indicator">➖ Restas</span>
-      </div>
+        <div class="header-score" id="header-score-box">
+            ⭐ <span id="header-score-val">0</span>
+        </div>
+        </div>
+    </header>
 
-      <!-- Instrucción con voz -->
-      <div style="margin-bottom: 1.5rem; text-align: left;">
-        <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
-          ¡Calcula el vuelto! La compra costó $700 y pagaron con $1000. Arrastra o haz clic en las monedas para dar el vuelto exacto de $300.
-        </span>
-      </div>
-
-      <!-- Boleta / Recibo -->
-      <div class="cash-register-receipt" id="receipt-container">
-        <!-- Rellenado por JS -->
-      </div>
-
-      <!-- Zona de Trabajo -->
-      <div class="game-workspace">
+    <main class="main-container">
+        <div class="kids-card game-card">
+        <h1 class="kids-title text-blue">💰 El Vuelto Correcto</h1>
         
-        <!-- Caja Registradora (Monedas de Origen) -->
-        <div>
-          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
-            🏧 Caja Registradora (Haz clic o arrastra monedas):
-          </div>
-          <div class="wallet-box" id="drawer-container">
-            <div class="coin-item coin-100" draggable="true" ondragstart="dragCoin(event, 100)" onclick="agregarMoneda(100)">$100</div>
-            <div class="coin-item coin-50" draggable="true" ondragstart="dragCoin(event, 50)" onclick="agregarMoneda(50)">$50</div>
-            <div class="coin-item coin-10" draggable="true" ondragstart="dragCoin(event, 10)" onclick="agregarMoneda(10)">$10</div>
-          </div>
+        <div class="game-info-row">
+            <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
+            <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+            <span class="round-indicator">➖ Restas</span>
         </div>
 
-        <!-- Mano del Cliente (Destino) -->
-        <div style="margin-top: 1.5rem;">
-          <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
-            🫱 Mano del Cliente (Haz clic en una moneda para devolverla a la caja):
-          </div>
-          <div class="hand-dropzone drop-target" id="hand-zone" ondragover="allowDrop(event)" ondrop="handleDrop(event)">
-            <!-- Monedas puestas -->
-          </div>
+        <!-- Instrucción con voz -->
+        <div style="margin-bottom: 1.5rem; text-align: left;">
+            <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+            ¡Calcula el vuelto! La compra costó $700 y pagaron con $1000. Arrastra o haz clic en las monedas para dar el vuelto exacto de $300.
+            </span>
         </div>
 
-        <!-- Total actual en mano (informativo discreto) -->
-        <div style="margin-top: 0.5rem; font-size: 1.2rem; font-weight: 700; color: var(--color-blue); text-align: right;">
-          Total colocado: <span id="current-placed-sum">$0</span>
+        <!-- Boleta / Recibo -->
+        <div class="cash-register-receipt" id="receipt-container">
+            <!-- Rellenado por JS -->
         </div>
 
-        <!-- Feedback Overlay -->
-        <div class="feedback-overlay" id="feedback-panel">
-          <div class="feedback-content">
-            <span class="feedback-emoji" id="feedback-emoji">🎉</span>
-            <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
-            <p class="feedback-msg tts-text" id="feedback-msg">¡Vuelto correcto!</p>
-            <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
-          </div>
+        <!-- Zona de Trabajo -->
+        <div class="game-workspace">
+            
+            <!-- Caja Registradora (Monedas de Origen) -->
+            <div>
+            <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+                🏧 Caja Registradora (Haz clic o arrastra monedas):
+            </div>
+            <div class="wallet-box" id="drawer-container">
+                <div class="coin-item coin-100" draggable="true" ondragstart="dragCoin(event, 100)" onclick="agregarMoneda(100)">$100</div>
+                <div class="coin-item coin-50" draggable="true" ondragstart="dragCoin(event, 50)" onclick="agregarMoneda(50)">$50</div>
+                <div class="coin-item coin-10" draggable="true" ondragstart="dragCoin(event, 10)" onclick="agregarMoneda(10)">$10</div>
+            </div>
+            </div>
+
+            <!-- Mano del Cliente (Destino) -->
+            <div style="margin-top: 1.5rem;">
+            <div style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+                🫱 Mano del Cliente (Haz clic en una moneda para devolverla a la caja):
+            </div>
+            <div class="hand-dropzone drop-target" id="hand-zone" ondragover="allowDrop(event)" ondrop="handleDrop(event)">
+                <!-- Monedas puestas -->
+            </div>
+            </div>
+
+            <!-- Total actual en mano (informativo discreto) -->
+            <div style="margin-top: 0.5rem; font-size: 1.2rem; font-weight: 700; color: var(--color-blue); text-align: right;">
+            Total colocado: <span id="current-placed-sum">$0</span>
+            </div>
+
+            <!-- Feedback Overlay -->
+            <div class="feedback-overlay" id="feedback-panel">
+            <div class="feedback-content">
+                <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+                <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
+                <p class="feedback-msg tts-text" id="feedback-msg">¡Vuelto correcto!</p>
+                <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
+            </div>
+            </div>
+
         </div>
 
-      </div>
-
-      <!-- Acciones de juego -->
-      <div class="game-actions">
-        <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
-          🔄 Reiniciar Nivel
-        </button>
-        <button onclick="validarVuelto()" class="kids-btn kids-btn-green">
-          Validar Vuelto 👍
-        </button>
-      </div>
-
-    </div>
-  </main>
-
-  <script src="js/audio.js"></script>
-  <script src="js/main.js"></script>
-  <script>
-    const rounds = [
-      {
-        cost: 700,
-        paid: 1000,
-        change: 300,
-        item: "🤖 Juguete Robot",
-        instruction: "¡Calcula el vuelto! El Robot costó $700 y pagaron con un billete de $1000. Arrastra las monedas correctas para entregar el vuelto de $300."
-      },
-      {
-        cost: 450,
-        paid: 500,
-        change: 50,
-        item: "🍭 Super Paleta de Dulce",
-        instruction: "¡Calcula el vuelto! La Paleta costó $450 y pagaron con una moneda de $500. Arrastra las monedas correctas para entregar el vuelto de $50."
-      },
-      {
-        cost: 820,
-        paid: 1000,
-        change: 180,
-        item: "📚 Libro de Cuentos",
-        instruction: "¡Calcula el vuelto! El Libro costó $820 y pagaron con un billete de $1000. Arrastra las monedas correctas para entregar el vuelto de $180."
-      }
-    ];
-
-    let currentRoundIndex = 0;
-    let handCoins = [];
-
-    function cargarRonda() {
-      const data = rounds[currentRoundIndex];
-      handCoins = [];
-
-      // Interfaz general
-      document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
-      document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
-      
-      const instr = document.getElementById('game-instruction');
-      instr.textContent = data.instruction;
-
-      // Actualizar recibo
-      const receipt = document.getElementById('receipt-container');
-      receipt.innerHTML = `
-        <div style="border-bottom: 2px dashed #94a3b8; padding-bottom: 0.5rem; margin-bottom: 0.5rem; text-align: center; font-weight: bold;">
-          🧾 CAJA REGISTRADORA
+        <!-- Acciones de juego -->
+        <div class="game-actions">
+            <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+            🔄 Reiniciar Nivel
+            </button>
+            <button onclick="validarVuelto()" class="kids-btn kids-btn-green">
+            Validar Vuelto 👍
+            </button>
         </div>
-        <div>Producto: <strong>${data.item}</strong></div>
-        <div>Precio: <strong style="color: var(--color-pink);">$${data.cost}</strong></div>
-        <div style="border-bottom: 1.5px solid #cbd5e1; padding-bottom: 0.3rem;">Pagó con: <strong style="color: var(--color-green);">$${data.paid}</strong></div>
-        <div style="padding-top: 0.3rem; font-size: 1.15rem; font-weight: bold;">Vuelto a entregar: <span style="color: var(--color-blue);">$${data.change}</span></div>
-      `;
 
-      // Vincular voz
-      const speakBtn = instr.nextElementSibling;
-      if (speakBtn) {
-        speakBtn.onclick = (e) => {
-          e.stopPropagation();
-          MathAudio.playClick();
-          MathAudio.speak(data.instruction, speakBtn);
-        };
-        // Hablar instrucción
-        MathAudio.speak(data.instruction, speakBtn);
-      }
+        </div>
+    </main>
 
-      actualizarManoVista();
-      document.getElementById('feedback-panel').style.display = 'none';
-    }
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        const rounds = [
+        {
+            cost: 700,
+            paid: 1000,
+            change: 300,
+            item: "🤖 Juguete Robot",
+            instruction: "¡Calcula el vuelto! El Robot costó $700 y pagaron con un billete de $1000. Arrastra las monedas correctas para entregar el vuelto de $300."
+        },
+        {
+            cost: 450,
+            paid: 500,
+            change: 50,
+            item: "🍭 Super Paleta de Dulce",
+            instruction: "¡Calcula el vuelto! La Paleta costó $450 y pagaron con una moneda de $500. Arrastra las monedas correctas para entregar el vuelto de $50."
+        },
+        {
+            cost: 820,
+            paid: 1000,
+            change: 180,
+            item: "📚 Libro de Cuentos",
+            instruction: "¡Calcula el vuelto! El Libro costó $820 y pagaron con un billete de $1000. Arrastra las monedas correctas para entregar el vuelto de $180."
+        }
+        ];
 
-    // Drag and Drop handlers
-    function dragCoin(e, val) {
-      e.dataTransfer.setData('text/plain', val.toString());
-    }
+        let currentRoundIndex = 0;
+        let handCoins = [];
 
-    function allowDrop(e) {
-      e.preventDefault();
-      document.getElementById('hand-zone').classList.add('drag-over');
-    }
+        function cargarRonda() {
+        const data = rounds[currentRoundIndex];
+        handCoins = [];
 
-    document.getElementById('hand-zone').addEventListener('dragleave', () => {
-      document.getElementById('hand-zone').classList.remove('drag-over');
-    });
+        // Interfaz general
+        document.getElementById('round-text').textContent = `Ronda ${currentRoundIndex + 1} de 3`;
+        document.getElementById('progress-bar').style.width = `${((currentRoundIndex) / 3) * 100}%`;
+        
+        const instr = document.getElementById('game-instruction');
+        instr.textContent = data.instruction;
 
-    function handleDrop(e) {
-      e.preventDefault();
-      document.getElementById('hand-zone').classList.remove('drag-over');
-      const valStr = e.dataTransfer.getData('text/plain');
-      if (valStr) {
-        const val = parseInt(valStr, 10);
-        agregarMoneda(val);
-      }
-    }
+        // Actualizar recibo
+        const receipt = document.getElementById('receipt-container');
+        receipt.innerHTML = `
+            <div style="border-bottom: 2px dashed #94a3b8; padding-bottom: 0.5rem; margin-bottom: 0.5rem; text-align: center; font-weight: bold;">
+            🧾 CAJA REGISTRADORA
+            </div>
+            <div>Producto: <strong>${data.item}</strong></div>
+            <div>Precio: <strong style="color: var(--color-pink);">$${data.cost}</strong></div>
+            <div style="border-bottom: 1.5px solid #cbd5e1; padding-bottom: 0.3rem;">Pagó con: <strong style="color: var(--color-green);">$${data.paid}</strong></div>
+            <div style="padding-top: 0.3rem; font-size: 1.15rem; font-weight: bold;">Vuelto a entregar: <span style="color: var(--color-blue);">$${data.change}</span></div>
+        `;
 
-    // Agregar moneda
-    function agregarMoneda(val) {
-      handCoins.push(val);
-      MathAudio.playClick();
-      actualizarManoVista();
-    }
+        // Vincular voz
+        const speakBtn = instr.nextElementSibling;
+        if (speakBtn) {
+            speakBtn.onclick = (e) => {
+            e.stopPropagation();
+            MathAudio.playClick();
+            MathAudio.speak(data.instruction, speakBtn);
+            };
+            // Hablar instrucción
+            MathAudio.speak(data.instruction, speakBtn);
+        }
 
-    // Quitar moneda
-    function quitarMoneda(index) {
-      handCoins.splice(index, 1);
-      MathAudio.playClick();
-      actualizarManoVista();
-    }
+        actualizarManoVista();
+        document.getElementById('feedback-panel').style.display = 'none';
+        }
 
-    // Actualizar vista
-    function actualizarManoVista() {
-      const handContainer = document.getElementById('hand-zone');
-      handContainer.innerHTML = '';
+        // Drag and Drop handlers
+        function dragCoin(e, val) {
+        e.dataTransfer.setData('text/plain', val.toString());
+        }
 
-      let sum = 0;
-      handCoins.forEach((val, idx) => {
-        sum += val;
-        const el = document.createElement('div');
-        el.className = `coin-item coin-${val}`;
-        el.textContent = `$${val}`;
-        el.addEventListener('click', () => quitarMoneda(idx));
-        handContainer.appendChild(el);
-      });
+        function allowDrop(e) {
+        e.preventDefault();
+        document.getElementById('hand-zone').classList.add('drag-over');
+        }
 
-      document.getElementById('current-placed-sum').textContent = `$${sum}`;
-    }
+        document.getElementById('hand-zone').addEventListener('dragleave', () => {
+        document.getElementById('hand-zone').classList.remove('drag-over');
+        });
 
-    // Validar vuelto al presionar botón
-    function validarVuelto() {
-      const data = rounds[currentRoundIndex];
-      const sum = handCoins.reduce((a, b) => a + b, 0);
+        function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('hand-zone').classList.remove('drag-over');
+        const valStr = e.dataTransfer.getData('text/plain');
+        if (valStr) {
+            const val = parseInt(valStr, 10);
+            agregarMoneda(val);
+        }
+        }
 
-      const feedback = document.getElementById('feedback-panel');
-      const title = document.getElementById('feedback-title');
-      const msg = document.getElementById('feedback-msg');
-      const emoji = document.getElementById('feedback-emoji');
-      const nextBtn = document.getElementById('feedback-btn');
+        // Agregar moneda
+        function agregarMoneda(val) {
+        handCoins.push(val);
+        MathAudio.playClick();
+        actualizarManoVista();
+        }
 
-      if (sum === data.change) {
-        // Acierto!
-        MathAudio.playCorrect();
+        // Quitar moneda
+        function quitarMoneda(index) {
+        handCoins.splice(index, 1);
+        MathAudio.playClick();
+        actualizarManoVista();
+        }
+
+        // Actualizar vista
+        function actualizarManoVista() {
+        const handContainer = document.getElementById('hand-zone');
+        handContainer.innerHTML = '';
+
+        let sum = 0;
+        handCoins.forEach((val, idx) => {
+            sum += val;
+            const el = document.createElement('div');
+            el.className = `coin-item coin-${val}`;
+            el.textContent = `$${val}`;
+            el.addEventListener('click', () => quitarMoneda(idx));
+            handContainer.appendChild(el);
+        });
+
+        document.getElementById('current-placed-sum').textContent = `$${sum}`;
+        }
+
+        // Validar vuelto al presionar botón
+        function validarVuelto() {
+        const data = rounds[currentRoundIndex];
+        const sum = handCoins.reduce((a, b) => a + b, 0);
+
+        const feedback = document.getElementById('feedback-panel');
+        const title = document.getElementById('feedback-title');
+        const msg = document.getElementById('feedback-msg');
+        const emoji = document.getElementById('feedback-emoji');
+        const nextBtn = document.getElementById('feedback-btn');
+
+        if (sum === data.change) {
+            // Acierto!
+            MathAudio.playCorrect();
+            MathApp.lanzarConfeti();
+            MathApp.addScore(15); // +15 puntos
+
+            title.textContent = "¡Vuelto Correcto!";
+            title.className = "feedback-title success";
+            emoji.textContent = "🪙";
+            
+            const successMsg = `¡Excelente! Diste exactamente $${data.change} de vuelto. ¡Restaste muy bien y ganaste 15 puntos!`;
+            msg.textContent = successMsg;
+            feedback.style.display = 'flex';
+            MathAudio.speak(successMsg);
+
+            nextBtn.onclick = () => {
+            currentRoundIndex++;
+            if (currentRoundIndex < rounds.length) {
+                cargarRonda();
+            } else {
+                document.getElementById('progress-bar').style.width = '100%';
+                mostrarVictoriaNivelCompleto();
+            }
+            };
+
+        } else {
+            // Fallo!
+            MathAudio.playIncorrect();
+            
+            let errorMsg = `¡Vuelto incorrecto! Pusiste $${sum}, pero el vuelto debe ser $${data.change}.`;
+            if (sum > data.change) {
+            errorMsg += " ¡Le estás dando dinero de más! Quita algunas monedas.";
+            } else {
+            errorMsg += " ¡Falta dinero! Agrega más monedas.";
+            }
+            
+            MathAudio.speak(errorMsg);
+
+            // Sacudir mano
+            const hand = document.getElementById('hand-zone');
+            hand.classList.add('shake-element');
+            setTimeout(() => hand.classList.remove('shake-element'), 500);
+        }
+        }
+
+        function mostrarVictoriaNivelCompleto() {
+        const feedback = document.getElementById('feedback-panel');
+        const title = document.getElementById('feedback-title');
+        const msg = document.getElementById('feedback-msg');
+        const emoji = document.getElementById('feedback-emoji');
+        const nextBtn = document.getElementById('feedback-btn');
+
         MathApp.lanzarConfeti();
-        MathApp.addScore(15); // +15 puntos
+        MathAudio.playWin();
 
-        title.textContent = "¡Vuelto Correcto!";
+        title.textContent = "¡Nivel Completado!";
         title.className = "feedback-title success";
-        emoji.textContent = "🪙";
+        emoji.textContent = "🏆";
         
-        const successMsg = `¡Excelente! Diste exactamente $${data.change} de vuelto. ¡Restaste muy bien y ganaste 15 puntos!`;
-        msg.textContent = successMsg;
+        const finishedMsg = "¡Fabuloso! Le entregaste el vuelto correcto a todos los clientes. ¡Dominas las restas!";
+        msg.textContent = finishedMsg;
+        
+        nextBtn.textContent = "Siguiente Juego 🚀";
         feedback.style.display = 'flex';
-        MathAudio.speak(successMsg);
+        MathAudio.speak(finishedMsg);
 
         nextBtn.onclick = () => {
-          currentRoundIndex++;
-          if (currentRoundIndex < rounds.length) {
-            cargarRonda();
-          } else {
-            document.getElementById('progress-bar').style.width = '100%';
-            mostrarVictoriaNivelCompleto();
-          }
+            window.location.href = 'juego2.html';
         };
-
-      } else {
-        // Fallo!
-        MathAudio.playIncorrect();
-        
-        let errorMsg = `¡Vuelto incorrecto! Pusiste $${sum}, pero el vuelto debe ser $${data.change}.`;
-        if (sum > data.change) {
-          errorMsg += " ¡Le estás dando dinero de más! Quita algunas monedas.";
-        } else {
-          errorMsg += " ¡Falta dinero! Agrega más monedas.";
         }
-        
-        MathAudio.speak(errorMsg);
 
-        // Sacudir mano
-        const hand = document.getElementById('hand-zone');
-        hand.classList.add('shake-element');
-        setTimeout(() => hand.classList.remove('shake-element'), 500);
-      }
-    }
+        function reiniciarRonda() {
+        MathAudio.playClick();
+        cargarRonda();
+        }
 
-    function mostrarVictoriaNivelCompleto() {
-      const feedback = document.getElementById('feedback-panel');
-      const title = document.getElementById('feedback-title');
-      const msg = document.getElementById('feedback-msg');
-      const emoji = document.getElementById('feedback-emoji');
-      const nextBtn = document.getElementById('feedback-btn');
-
-      MathApp.lanzarConfeti();
-      MathAudio.playWin();
-
-      title.textContent = "¡Nivel Completado!";
-      title.className = "feedback-title success";
-      emoji.textContent = "🏆";
-      
-      const finishedMsg = "¡Fabuloso! Le entregaste el vuelto correcto a todos los clientes. ¡Dominas las restas!";
-      msg.textContent = finishedMsg;
-      
-      nextBtn.textContent = "Siguiente Juego 🚀";
-      feedback.style.display = 'flex';
-      MathAudio.speak(finishedMsg);
-
-      nextBtn.onclick = () => {
-        window.location.href = 'juego2.html';
-      };
-    }
-
-    function reiniciarRonda() {
-      MathAudio.playClick();
-      cargarRonda();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      cargarRonda();
-    });
-  </script>
-</body>
-</html>
+        document.addEventListener('DOMContentLoaded', () => {
+        cargarRonda();
+        });
+    </script>
+    </body>
+    </html>

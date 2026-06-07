@@ -5,178 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aventura Matemática - Registro</title>
   <link rel="stylesheet" href="css/style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/logoo.png">
+
 </head>
 <body>
-  
-  <header class="header-bar">
+
+    <header class="header-bar">
     <div class="header-brand">
-      🚀 Aventura Matemática
+        🚀 Aventura Matemática
     </div>
     <div class="header-score" id="header-score-box" style="display: none;">
-      ⭐ <span id="header-score-val">0</span>
+        ⭐ <span id="header-score-val">0</span>
     </div>
-  </header>
+    </header>
 
-  <main class="main-container">
-    <div class="kids-card">
-      <h1 class="kids-title">¡Bienvenido Aventurero!</h1>
-      <p class="kids-subtitle tts-text tts-auto">¡Hola! Para comenzar nuestra gran aventura de matemáticas, dinos tu nombre y escoge tu avatar favorito.</p>
+    <main class="main-container">
+        <div class="kids-card">
+            <h1 class="kids-title">¡Bienvenido Aventurero!</h1>
+            <p class="kids-subtitle tts-text tts-auto">¡Hola! Para comenzar nuestra gran aventura de matemáticas, dinos tu nombre y escoge tu avatar favorito.</p>
       
-      <form id="registro-form" onsubmit="event.preventDefault();">
+            <form id="registro-form" onsubmit="event.preventDefault();">
         <div class="kids-input-group">
-          <label class="kids-label" for="student-name">Escribe tu nombre:</label>
-          <input type="text" id="student-name" class="kids-input" placeholder="Tu nombre aquí..." required autocomplete="off">
+            <label class="kids-label" for="student-name">Escribe tu nombre:</label>
+            <input type="text" id="student-name" class="kids-input" placeholder="Tu nombre aquí..." required autocomplete="off">
         </div>
 
         <label class="kids-label" style="text-align: left;">Elige tu avatar:</label>
         <div class="avatar-grid" id="avatar-selector">
-          <!-- León -->
-          <div class="avatar-option" data-avatar="leoncito">
-            <svg viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" fill="#fcd34d"/>
-              <circle cx="50" cy="50" r="35" fill="#f59e0b"/>
-              <circle cx="35" cy="45" r="4" fill="#000"/>
-              <circle cx="65" cy="45" r="4" fill="#000"/>
-              <path d="M 45 60 Q 50 65 55 60" stroke="#000" stroke-width="3" fill="none"/>
-              <path d="M 35 30 A 8 8 0 0 1 47 38" stroke="#f59e0b" stroke-width="6" fill="none"/>
-              <path d="M 65 30 A 8 8 0 0 0 53 38" stroke="#f59e0b" stroke-width="6" fill="none"/>
+            <!-- León -->
+            <div class="avatar-option" data-avatar="leoncito">
+                <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#fcd34d"/>
+                <circle cx="50" cy="50" r="35" fill="#f59e0b"/>
+                <circle cx="35" cy="45" r="4" fill="#000"/>
+                <circle cx="65" cy="45" r="4" fill="#000"/>
+                <path d="M 45 60 Q 50 65 55 60" stroke="#000" stroke-width="3" fill="none"/>
+                <path d="M 35 30 A 8 8 0 0 1 47 38" stroke="#f59e0b" stroke-width="6" fill="none"/>
+                <path d="M 65 30 A 8 8 0 0 0 53 38" stroke="#f59e0b" stroke-width="6" fill="none"/>
             </svg>
             <span class="avatar-name">Leoncito</span>
-          </div>
-          <!-- Oso -->
-          <div class="avatar-option" data-avatar="osito">
-            <svg viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" fill="#b45309"/>
-              <circle cx="25" cy="25" r="12" fill="#78350f"/>
-              <circle cx="75" cy="25" r="12" fill="#78350f"/>
-              <circle cx="50" cy="53" r="30" fill="#d97706"/>
-              <circle cx="40" cy="48" r="4" fill="#000"/>
-              <circle cx="60" cy="48" r="4" fill="#000"/>
-              <ellipse cx="50" cy="58" rx="6" ry="4" fill="#000"/>
-              <path d="M 46 64 Q 50 67 54 64" stroke="#000" stroke-width="2" fill="none"/>
-            </svg>
-            <span class="avatar-name">Osito</span>
-          </div>
-          <!-- Conejo -->
-          <div class="avatar-option" data-avatar="conejito">
-            <svg viewBox="0 0 100 100">
-              <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f1f5f9"/>
-              <ellipse cx="30" cy="35" rx="10" ry="25" fill="#f1f5f9"/>
-              <ellipse cx="30" cy="35" rx="5" ry="18" fill="#fda4af"/>
-              <ellipse cx="70" cy="35" rx="10" ry="25" fill="#f1f5f9"/>
-              <ellipse cx="70" cy="35" rx="5" ry="18" fill="#fda4af"/>
-              <circle cx="40" cy="60" r="4" fill="#000"/>
-              <circle cx="60" cy="60" r="4" fill="#000"/>
-              <polygon points="47,67 53,67 50,71" fill="#fda4af"/>
-              <path d="M 45 74 Q 50 78 55 74" stroke="#475569" stroke-width="2" fill="none"/>
-            </svg>
-            <span class="avatar-name">Conejito</span>
-          </div>
-          <!-- Panda -->
-          <div class="avatar-option" data-avatar="pandita">
-            <svg viewBox="0 0 100 100">
-              <circle cx="50" cy="55" r="38" fill="#fff" stroke="#1e293b" stroke-width="3"/>
-              <circle cx="25" cy="25" r="12" fill="#1e293b"/>
-              <circle cx="75" cy="25" r="12" fill="#1e293b"/>
-              <ellipse cx="38" cy="50" rx="7" ry="10" fill="#1e293b"/>
-              <ellipse cx="62" cy="50" rx="7" ry="10" fill="#1e293b"/>
-              <circle cx="38" cy="48" r="3" fill="#fff"/>
-              <circle cx="62" cy="48" r="3" fill="#fff"/>
-              <polygon points="48,60 52,60 50,63" fill="#1e293b"/>
-              <path d="M 46 66 Q 50 69 54 66" stroke="#1e293b" stroke-width="2" fill="none"/>
-            </svg>
-            <span class="avatar-name">Pandita</span>
-          </div>
-          <!-- Rana -->
-          <div class="avatar-option" data-avatar="ranita">
-            <svg viewBox="0 0 100 100">
-              <ellipse cx="50" cy="58" rx="42" ry="32" fill="#4ade80"/>
-              <circle cx="32" cy="32" r="12" fill="#4ade80"/>
-              <circle cx="68" cy="32" r="12" fill="#4ade80"/>
-              <circle cx="32" cy="32" r="6" fill="#fff"/>
-              <circle cx="68" cy="32" r="6" fill="#fff"/>
-              <circle cx="32" cy="32" r="3" fill="#000"/>
-              <circle cx="68" cy="32" r="3" fill="#000"/>
-              <ellipse cx="50" cy="65" rx="20" ry="12" fill="#166534"/>
-              <ellipse cx="22" cy="60" rx="6" ry="4" fill="#f87171"/>
-              <ellipse cx="78" cy="60" rx="6" ry="4" fill="#f87171"/>
-            </svg>
-            <span class="avatar-name">Ranita</span>
-          </div>
-          <!-- Zorro -->
-          <div class="avatar-option" data-avatar="zorrito">
-            <svg viewBox="0 0 100 100">
-              <polygon points="50,25 20,65 80,65" fill="#f97316"/>
-              <polygon points="50,25 35,50 65,50" fill="#ea580c"/>
-              <polygon points="20,65 50,65 30,85" fill="#fff"/>
-              <polygon points="80,65 50,65 70,85" fill="#fff"/>
-              <polygon points="30,85 50,65 70,85" fill="#f97316"/>
-              <circle cx="38" cy="65" r="4" fill="#000"/>
-              <circle cx="62" cy="65" r="4" fill="#000"/>
-              <ellipse cx="50" cy="80" rx="6" ry="5" fill="#000"/>
-              <path d="M 45 50 Q 50 45 55 50" stroke="#f97316" stroke-width="3" fill="none"/>
-            </svg>
-            <span class="avatar-name">Zorrito</span>
-          </div>
+            </div>
+            <!-- Oso -->
+            <div class="avatar-option" data-avatar="osito">
+                <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="#b45309"/>
+                <circle cx="25" cy="25" r="12" fill="#78350f"/>
+                <circle cx="75" cy="25" r="12" fill="#78350f"/>
+                <circle cx="50" cy="53" r="30" fill="#d97706"/>
+                <circle cx="40" cy="48" r="4" fill="#000"/>
+                <circle cx="60" cy="48" r="4" fill="#000"/>
+                <ellipse cx="50" cy="58" rx="6" ry="4" fill="#000"/>
+                <path d="M 46 64 Q 50 67 54 64" stroke="#000" stroke-width="2" fill="none"/>
+                </svg>
+                <span class="avatar-name">Osito</span>
+            </div>
+            <!-- Conejo -->
+            <div class="avatar-option" data-avatar="conejito">
+                <svg viewBox="0 0 100 100">
+                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f1f5f9"/>
+                <ellipse cx="30" cy="35" rx="10" ry="25" fill="#f1f5f9"/>
+                <ellipse cx="30" cy="35" rx="5" ry="18" fill="#fda4af"/>
+                <ellipse cx="70" cy="35" rx="10" ry="25" fill="#f1f5f9"/>
+                <ellipse cx="70" cy="35" rx="5" ry="18" fill="#fda4af"/>
+                <circle cx="40" cy="60" r="4" fill="#000"/>
+                <circle cx="60" cy="60" r="4" fill="#000"/>
+                <polygon points="47,67 53,67 50,71" fill="#fda4af"/>
+                <path d="M 45 74 Q 50 78 55 74" stroke="#475569" stroke-width="2" fill="none"/>
+                </svg>
+                <span class="avatar-name">Conejito</span>
+            </div>
+            <!-- Panda -->
+            <div class="avatar-option" data-avatar="pandita">
+                <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="55" r="38" fill="#fff" stroke="#1e293b" stroke-width="3"/>
+                <circle cx="25" cy="25" r="12" fill="#1e293b"/>
+                <circle cx="75" cy="25" r="12" fill="#1e293b"/>
+                <ellipse cx="38" cy="50" rx="7" ry="10" fill="#1e293b"/>
+                <ellipse cx="62" cy="50" rx="7" ry="10" fill="#1e293b"/>
+                <circle cx="38" cy="48" r="3" fill="#fff"/>
+                <circle cx="62" cy="48" r="3" fill="#fff"/>
+                <polygon points="48,60 52,60 50,63" fill="#1e293b"/>
+                <path d="M 46 66 Q 50 69 54 66" stroke="#1e293b" stroke-width="2" fill="none"/>
+                </svg>
+                <span class="avatar-name">Pandita</span>
+            </div>
+            <!-- Rana -->
+            <div class="avatar-option" data-avatar="ranita">
+                <svg viewBox="0 0 100 100">
+                <ellipse cx="50" cy="58" rx="42" ry="32" fill="#4ade80"/>
+                <circle cx="32" cy="32" r="12" fill="#4ade80"/>
+                <circle cx="68" cy="32" r="12" fill="#4ade80"/>
+                <circle cx="32" cy="32" r="6" fill="#fff"/>
+                <circle cx="68" cy="32" r="6" fill="#fff"/>
+                <circle cx="32" cy="32" r="3" fill="#000"/>
+                <circle cx="68" cy="32" r="3" fill="#000"/>
+                <ellipse cx="50" cy="65" rx="20" ry="12" fill="#166534"/>
+                <ellipse cx="22" cy="60" rx="6" ry="4" fill="#f87171"/>
+                <ellipse cx="78" cy="60" rx="6" ry="4" fill="#f87171"/>
+                </svg>
+                <span class="avatar-name">Ranita</span>
+            </div>
+            <!-- Zorro -->
+            <div class="avatar-option" data-avatar="zorrito">
+                <svg viewBox="0 0 100 100">
+                <polygon points="50,25 20,65 80,65" fill="#f97316"/>
+                <polygon points="50,25 35,50 65,50" fill="#ea580c"/>
+                <polygon points="20,65 50,65 30,85" fill="#fff"/>
+                <polygon points="80,65 50,65 70,85" fill="#fff"/>
+                <polygon points="30,85 50,65 70,85" fill="#f97316"/>
+                <circle cx="38" cy="65" r="4" fill="#000"/>
+                <circle cx="62" cy="65" r="4" fill="#000"/>
+                <ellipse cx="50" cy="80" rx="6" ry="5" fill="#000"/>
+                <path d="M 45 50 Q 50 45 55 50" stroke="#f97316" stroke-width="3" fill="none"/>
+                </svg>
+                <span class="avatar-name">Zorrito</span>
+            </div>
+            </div>
+
+            <button type="submit" id="btn-ingresar" class="kids-btn kids-btn-orange">¡Ingresar a la aventura! 🎮</button>
+        </form>
         </div>
+    </main>
 
-        <button type="submit" id="btn-ingresar" class="kids-btn kids-btn-orange">¡Ingresar a la aventura! 🎮</button>
-      </form>
-    </div>
-  </main>
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Lógica particular del registro
+        let selectedAvatar = null;
 
-  <script src="js/audio.js"></script>
-  <script src="js/main.js"></script>
-  <script>
-    // Lógica particular del registro
-    let selectedAvatar = null;
+        // Selector de avatar
+        document.querySelectorAll('.avatar-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+            opt.classList.add('selected');
+            selectedAvatar = opt.getAttribute('data-avatar');
+            MathAudio.playClick();
+        });
+        });
 
-    // Selector de avatar
-    document.querySelectorAll('.avatar-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
-        opt.classList.add('selected');
-        selectedAvatar = opt.getAttribute('data-avatar');
-        MathAudio.playClick();
-      });
-    });
+        // Formulario de ingreso
+        document.getElementById('registro-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombreInput = document.getElementById('student-name').value.trim();
 
-    // Formulario de ingreso
-    document.getElementById('registro-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nombreInput = document.getElementById('student-name').value.trim();
+        // Validación obligatoria
+        if (!nombreInput || !selectedAvatar) {
+            // Reproducir advertencia con voz nativa
+            const errorText = "Por favor, ingresa tu nombre y selecciona un avatar para poder jugar.";
+            MathAudio.speak(errorText);
+            
+            // Efecto sacudida en la tarjeta
+            const card = document.querySelector('.kids-card');
+            card.classList.add('shake-element');
+            setTimeout(() => card.classList.remove('shake-element'), 500);
+            return;
+        }
 
-      // Validación obligatoria
-      if (!nombreInput || !selectedAvatar) {
-        // Reproducir advertencia con voz nativa
-        const errorText = "Por favor, ingresa tu nombre y selecciona un avatar para poder jugar.";
-        MathAudio.speak(errorText);
-        
-        // Efecto sacudida en la tarjeta
-        const card = document.querySelector('.kids-card');
-        card.classList.add('shake-element');
-        setTimeout(() => card.classList.remove('shake-element'), 500);
-        return;
-      }
+        // Guardar en localStorage
+        localStorage.setItem('mat_nombre', nombreInput);
+        localStorage.setItem('mat_avatar', selectedAvatar);
+        localStorage.setItem('mat_score', '0');
 
-      // Guardar en localStorage
-      localStorage.setItem('mat_nombre', nombreInput);
-      localStorage.setItem('mat_avatar', selectedAvatar);
-      localStorage.setItem('mat_score', '0');
+        // Animaciones e ingreso exitoso
+        MathAudio.playWelcome();
+        MathApp.lanzarConfeti();
 
-      // Animaciones e ingreso exitoso
-      MathAudio.playWelcome();
-      MathApp.lanzarConfeti();
+        const btn = document.getElementById('btn-ingresar');
+        btn.disabled = true;
+        btn.textContent = "¡Cargando Aventura! ✨";
 
-      const btn = document.getElementById('btn-ingresar');
-      btn.disabled = true;
-      btn.textContent = "¡Cargando Aventura! ✨";
-
-      // Redirigir después de deleitarse con el confeti
-      setTimeout(() => {
-        window.location.href = 'bienvenida.html';
-      }, 1500);
-    });
-  </script>
-</body>
-</html>
+        // Redirigir después de deleitarse con el confeti
+        setTimeout(() => {
+            window.location.href = 'bienvenida.html';
+        }, 1500);
+        });
+    </script>
+    </body>
