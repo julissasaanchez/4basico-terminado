@@ -25,10 +25,10 @@
             <h1 class="kids-title">¡Bienvenido Aventurero!</h1>
             <p class="kids-subtitle tts-text tts-auto">¡Hola! Para comenzar nuestra gran aventura de matemáticas, dinos tu nombre y escoge tu avatar favorito.</p>
       
-            <form id="registro-form" onsubmit="event.preventDefault();">
+            <form id="registro-form" 
         <div class="kids-input-group">
             <label class="kids-label" for="student-name">Escribe tu nombre:</label>
-            <input type="text" id="student-name" class="kids-input" placeholder="Tu nombre aquí..." required autocomplete="off">
+            <input type="text" id="student-name" class="kids-input" placeholder="Tu nombre aquí..."  autocomplete="off">
         </div>
 
         <label class="kids-label" style="text-align: left;">Elige tu avatar:</label>
@@ -144,23 +144,55 @@
         });
         });
 
+        //Sacudir tarjeta
+        function sacudirTarjeta() {
+
+            const card = document.querySelector('.kids-card');
+
+            card.classList.add('shake-element');
+
+            setTimeout(() => {
+                card.classList.remove('shake-element');
+            }, 500);
+        }
+
+
+
         // Formulario de ingreso
         document.getElementById('registro-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const nombreInput = document.getElementById('student-name').value.trim();
 
         // Validación obligatoria
-        if (!nombreInput || !selectedAvatar) {
-            // Reproducir advertencia con voz nativa
-            const errorText = "Por favor, ingresa tu nombre y selecciona un avatar para poder jugar.";
-            MathAudio.speak(errorText);
-            
-            // Efecto sacudida en la tarjeta
-            const card = document.querySelector('.kids-card');
-            card.classList.add('shake-element');
-            setTimeout(() => card.classList.remove('shake-element'), 500);
-            return;
-        }
+        if (!nombreInput && !selectedAvatar) {
+
+                MathAudio.speak(
+                    "Debe escribir su nombre y seleccionar un avatar."
+                );
+
+                sacudirTarjeta();
+                return;
+            }
+
+            if (!nombreInput) {
+
+                MathAudio.speak(
+                    "Debe escribir su nombre."
+                );
+
+                sacudirTarjeta();
+                return;
+            }
+
+            if (!selectedAvatar) {
+
+                MathAudio.speak(
+                    "Debe seleccionar un avatar."
+                );
+
+                sacudirTarjeta();
+                return;
+            }
 
         // Guardar en localStorage
         localStorage.setItem('mat_nombre', nombreInput);
