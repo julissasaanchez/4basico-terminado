@@ -467,4 +467,671 @@
         });
     </script>
     </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧩 Crucigrama Matemático - Operaciones</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/logoo.png">
+    <style>
+        /* Crucigrama Matemático - Estilos Adicionales */
+        .crossword-cell-input {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: white;
+            font-family: var(--font-kids);
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+            user-select: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .crossword-cell-input.drag-over {
+            border-color: var(--color-purple);
+            background: #faf5ff;
+            transform: scale(1.08);
+            box-shadow: 0 0 8px rgba(181, 95, 230, 0.4);
+        }
+        .crossword-cell-input.filled {
+            border-color: var(--color-blue);
+            background: #eff6ff;
+        }
+        .crossword-cell-input.correct {
+            background: #d1fae5;
+            border-color: #34d399;
+            color: #065f46;
+        }
+        .crossword-cell-input.incorrect {
+            background: #fee2e2;
+            border-color: #f87171;
+            color: #991b1b;
+        }
+        .answer-bank {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border: 3px dashed #cbd5e1;
+            border-radius: 20px;
+        }
+        .answer-token {
+            background: white;
+            border: 3px solid var(--color-orange);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            cursor: grab;
+            box-shadow: 0 4px 0 var(--color-orange-hover);
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .answer-token:hover {
+            transform: scale(1.08);
+        }
+        .answer-token:active {
+            cursor: grabbing;
+        }
+        .answer-token.selected {
+            border-color: var(--color-purple);
+            box-shadow: 0 0 0 4px rgba(181, 95, 230, 0.25), 0 4px 0 var(--color-purple-hover);
+        }
+        .clue-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding: 0;
+        }
+        .clue-item {
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            border-left: 5px solid var(--color-blue);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 1.05rem;
+        }
+        .clue-item:hover {
+            background: #eff6ff;
+            transform: translateX(3px);
+        }
+        .clue-item.active {
+            background: #e0f2fe;
+            border-left-color: var(--color-orange);
+        }
+        @media (max-width: 700px) {
+            .crossword-cell-input {
+                font-size: 0.95rem;
+                border-width: 1px;
+            }
+            .answer-token {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+            .clue-item {
+                font-size: 0.95rem;
+                padding: 0.5rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bar">
+        <a href="todos.html" class="header-brand">🚀 Aventura Matemática</a>
+        <div class="header-user-info">
+            <div class="header-profile">
+                <div id="header-avatar-container"></div>
+                <span class="header-username" id="header-username-val"></span>
+            </div>
+            <div class="header-score" id="header-score-box">
+                ⭐ <span id="header-score-val">0</span>
+            </div>
+        </div>
+    </header>
+    <main class="main-container">
+        <div class="kids-card game-card">
+            <h1 class="kids-title text-purple">🧩 Crucigrama Matemático</h1>
+            
+            <div class="game-info-row">
+                <span class="round-indicator" id="round-text">Ronda 1 de 3</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
+                </div>
+                <span class="round-indicator" id="round-type">➕➖✖️➗ Operaciones</span>
+            </div>
+            <!-- Instrucción con voz -->
+            <div style="margin-bottom: 1.5rem; text-align: left;">
+                <span class="kids-subtitle tts-text tts-auto" id="game-instruction">
+                    Resuelve las operaciones y completa el crucigrama arrastrando las respuestas.
+                </span>
+            </div>
+            <!-- Zona de Trabajo -->
+            <div class="game-workspace">
+                
+                <div class="crossword-container">
+                    <!-- Cuadrícula -->
+                    <div class="crossword-grid" id="crossword-grid">
+                        <!-- Celdas cargadas dinámicamente -->
+                    </div>
+                    <!-- Pistas -->
+                    <div class="crossword-clues">
+                        <h3 class="clue-section-title">🕵️‍♂️ Operaciones a resolver</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+                            (Haz clic en una pista para escucharla o para colocar la respuesta seleccionada)
+                        </p>
+                        <ul class="clue-list" id="clue-list-container">
+                            <!-- Pistas dinámicas -->
+                        </ul>
+                    </div>
+                </div>
+                <!-- Banco de Respuestas -->
+                <div style="margin-top: 1.5rem;">
+                    <div style="font-size: 0.95rem; font-weight: bold; color: var(--text-color); margin-bottom: 0.5rem; text-align: center;">
+                        🔢 Banco de Números (Arrastra al crucigrama o selecciona con un clic):
+                    </div>
+                    <div class="answer-bank" id="answer-bank">
+                        <!-- Burbujas de números -->
+                    </div>
+                </div>
+                <!-- Feedback Overlay -->
+                <div class="feedback-overlay" id="feedback-panel">
+                    <div class="feedback-content">
+                        <span class="feedback-emoji" id="feedback-emoji">🎉</span>
+                        <h2 class="feedback-title success" id="feedback-title">¡Excelente!</h2>
+                        <p class="feedback-msg tts-text" id="feedback-msg">¡Resuelto correctamente!</p>
+                        <button id="feedback-btn" class="kids-btn kids-btn-green">¡Siguiente! ➡️</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Acciones de juego -->
+            <div class="game-actions">
+                <button onclick="reiniciarRonda()" class="kids-btn kids-btn-purple" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">
+                    🔄 Reiniciar Ronda
+                </button>
+                <button onclick="validarCrucigrama()" class="kids-btn kids-btn-orange">
+                    Validar Respuestas 🕵️‍♂️
+                </button>
+            </div>
+        </div>
+    </main>
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        const rounds = [
+            {
+                title: "Ronda 1 de 3",
+                type: "➕➖✖️➗ Operaciones Básicas",
+                instruction: "Resuelve las operaciones y completa el crucigrama arrastrando las respuestas.",
+                clues: [
+                    { id: 1, text: "1. Horizontal: 8 + 4", direction: "H", row: 3, col: 3, answer: "12", length: 2 },
+                    { id: 2, text: "2. Vertical: 15 - 13", direction: "V", row: 3, col: 4, answer: "2", length: 1 },
+                    { id: 3, text: "3. Horizontal: 3 × 5", direction: "H", row: 5, col: 5, answer: "15", length: 2 },
+                    { id: 4, text: "4. Vertical: 20 ÷ 4", direction: "V", row: 5, col: 6, answer: "5", length: 1 }
+                ],
+                answers: ["12", "2", "15", "5", "9", "6", "10"]
+            },
+            {
+                title: "Ronda 2 de 3",
+                type: "➕➖✖️➗ Dificultad Media",
+                instruction: "¡Excelente trabajo! Pasemos a la ronda media. Resuelve y completa el crucigrama.",
+                clues: [
+                    { id: 1, text: "1. Horizontal: 18 + 7", direction: "H", row: 3, col: 3, answer: "25", length: 2 },
+                    { id: 2, text: "2. Vertical: 6 × 4", direction: "V", row: 3, col: 3, answer: "24", length: 2 },
+                    { id: 3, text: "3. Horizontal: 25 - 8", direction: "H", row: 5, col: 4, answer: "17", length: 2 },
+                    { id: 4, text: "4. Vertical: 42 ÷ 6", direction: "V", row: 5, col: 5, answer: "7", length: 1 }
+                ],
+                answers: ["25", "24", "17", "7", "15", "8", "20"]
+            },
+            {
+                title: "Ronda 3 de 3",
+                type: "➕➖✖️➗ Desafío Avanzado",
+                instruction: "¡Último nivel! Resuelve las operaciones avanzadas para dominar el crucigrama.",
+                clues: [
+                    { id: 1, text: "1. Horizontal: 36 + 18", direction: "H", row: 3, col: 3, answer: "54", length: 2 },
+                    { id: 2, text: "2. Vertical: 9 × 5", direction: "V", row: 3, col: 4, answer: "45", length: 2 },
+                    { id: 3, text: "3. Horizontal: 8 × 7", direction: "H", row: 4, col: 4, answer: "56", length: 2 },
+                    { id: 4, text: "4. Vertical: 48 ÷ 8", direction: "V", row: 4, col: 5, answer: "6", length: 1 }
+                ],
+                answers: ["54", "45", "56", "6", "50", "7", "48"]
+            }
+        ];
+        let currentRoundIndex = 0;
+        let clues = [];
+        let placedAnswers = {};
+        let selectedToken = null;
+        function getClueCells(clue) {
+            const cells = [];
+            for (let i = 0; i < clue.length; i++) {
+                if (clue.direction === "H") {
+                    cells.push({ row: clue.row, col: clue.col + i });
+                } else {
+                    cells.push({ row: clue.row + i, col: clue.col });
+                }
+            }
+            return cells;
+        }
+        function getCellDigit(r, c) {
+            let digit = null;
+            clues.forEach(clue => {
+                const placed = placedAnswers[clue.id];
+                if (placed) {
+                    const cells = getClueCells(clue);
+                    const idx = cells.findIndex(cell => cell.row === r && cell.col === c);
+                    if (idx !== -1 && idx < placed.length) {
+                        digit = placed[idx];
+                    }
+                }
+            });
+            return digit;
+        }
+        function cargarRonda() {
+            const data = rounds[currentRoundIndex];
+            clues = data.clues;
+            placedAnswers = {};
+            selectedToken = null;
+            // Resetear respuestas en blanco
+            clues.forEach(clue => {
+                placedAnswers[clue.id] = null;
+            });
+            // Actualizar interfaz general
+            document.getElementById('round-text').textContent = data.title;
+            document.getElementById('round-type').textContent = data.type;
+            document.getElementById('progress-bar').style.width = `${(currentRoundIndex / 3) * 100}%`;
+            const instructionEl = document.getElementById('game-instruction');
+            instructionEl.textContent = data.instruction;
+            // Vincular TTS
+            const speakBtn = instructionEl.nextElementSibling;
+            if (speakBtn) {
+                speakBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    MathAudio.playClick();
+                    MathAudio.speak(data.instruction, speakBtn);
+                };
+            }
+            // Mezclar las respuestas del banco
+            data.answers.sort(() => Math.random() - 0.5);
+            updateInterface();
+            // Ocultar overlay de retroalimentación
+            document.getElementById('feedback-panel').style.display = 'none';
+            // Auto hablar instrucción
+            setTimeout(() => {
+                MathAudio.speak(data.instruction);
+            }, 800);
+        }
+        function updateInterface() {
+            renderGrid();
+            renderClues();
+            renderAnswerBank();
+        }
+        function renderGrid() {
+            const gridContainer = document.getElementById('crossword-grid');
+            gridContainer.innerHTML = '';
+            // Mapear celdas activas
+            const activeCells = {};
+            clues.forEach(clue => {
+                const cells = getClueCells(clue);
+                cells.forEach(cell => {
+                    const key = `${cell.row},${cell.col}`;
+                    if (!activeCells[key]) {
+                        activeCells[key] = {
+                            row: cell.row,
+                            col: cell.col,
+                            clues: []
+                        };
+                    }
+                    activeCells[key].clues.push(clue.id);
+                });
+            });
+            // Dibujar cuadrícula 12x11
+            for (let r = 0; r < 11; r++) {
+                for (let c = 0; c < 12; c++) {
+                    const key = `${r},${c}`;
+                    const cellEl = document.createElement('div');
+                    if (activeCells[key]) {
+                        cellEl.className = 'crossword-cell';
+                        // Colocar número de pista si es celda de inicio
+                        const startClueIds = [];
+                        clues.forEach(clue => {
+                            if (clue.row === r && clue.col === c) {
+                                startClueIds.push(clue.id);
+                            }
+                        });
+                        if (startClueIds.length > 0) {
+                            const numLabel = document.createElement('span');
+                            numLabel.className = 'crossword-number';
+                            numLabel.textContent = startClueIds.join(',');
+                            cellEl.appendChild(numLabel);
+                        }
+                        // Input virtual
+                        const inputEl = document.createElement('div');
+                        inputEl.className = 'crossword-cell-input';
+                        inputEl.setAttribute('data-row', r);
+                        inputEl.setAttribute('data-col', c);
+                        inputEl.setAttribute('data-clues', activeCells[key].clues.join(','));
+                        const digit = getCellDigit(r, c);
+                        if (digit !== null) {
+                            inputEl.textContent = digit;
+                            inputEl.classList.add('filled');
+                        } else {
+                            inputEl.textContent = '';
+                        }
+                        // Configurar Drag & Drop
+                        setupCellDragAndDrop(inputEl, activeCells[key].clues);
+                        // Configurar Clic
+                        inputEl.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            handleCellClick(activeCells[key].clues);
+                        });
+                        cellEl.appendChild(inputEl);
+                    } else {
+                        cellEl.className = 'crossword-cell empty';
+                    }
+                    gridContainer.appendChild(cellEl);
+                }
+            }
+        }
+        function highlightClueCells(clueIds, highlight) {
+            const cells = document.querySelectorAll('.crossword-cell-input');
+            cells.forEach(cell => {
+                const cellClues = cell.getAttribute('data-clues').split(',').map(Number);
+                const hasOverlap = cellClues.some(id => clueIds.includes(id));
+                if (hasOverlap) {
+                    if (highlight) {
+                        cell.classList.add('drag-over');
+                    } else {
+                        cell.classList.remove('drag-over');
+                    }
+                }
+            });
+        }
+        function setupCellDragAndDrop(inputEl, clueIds) {
+            inputEl.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                highlightClueCells(clueIds, true);
+            });
+            inputEl.addEventListener('dragleave', () => {
+                highlightClueCells(clueIds, false);
+            });
+            inputEl.addEventListener('drop', (e) => {
+                e.preventDefault();
+                highlightClueCells(clueIds, false);
+                const tokenVal = e.dataTransfer.getData('text/plain');
+                if (tokenVal) {
+                    handlePlacement(clueIds, tokenVal);
+                }
+            });
+        }
+        function handlePlacement(clueIds, tokenVal) {
+            if (clueIds.length === 1) {
+                placedAnswers[clueIds[0]] = tokenVal;
+            } else {
+                // Celda compartida (intersección)
+                let targetClueId = null;
+                // Intentar colocar en el que corresponda el resultado
+                for (let id of clueIds) {
+                    const clue = clues.find(c => c.id === id);
+                    if (clue && clue.answer === tokenVal) {
+                        targetClueId = id;
+                        break;
+                    }
+                }
+                // Si no, en el primero vacío
+                if (!targetClueId) {
+                    for (let id of clueIds) {
+                        if (!placedAnswers[id]) {
+                            targetClueId = id;
+                            break;
+                        }
+                    }
+                }
+                // Fallback
+                if (!targetClueId) {
+                    targetClueId = clueIds[0];
+                }
+                placedAnswers[targetClueId] = tokenVal;
+            }
+            MathAudio.playClick();
+            selectedToken = null;
+            updateInterface();
+        }
+        function handleCellClick(clueIds) {
+            if (selectedToken !== null) {
+                handlePlacement(clueIds, selectedToken);
+            } else {
+                // Devolver respuesta de la pista
+                let cleared = false;
+                for (let id of clueIds) {
+                    if (placedAnswers[id]) {
+                        placedAnswers[id] = null;
+                        cleared = true;
+                    }
+                }
+                if (cleared) {
+                    MathAudio.playClick();
+                    updateInterface();
+                }
+            }
+        }
+        function renderClues() {
+            const container = document.getElementById('clue-list-container');
+            container.innerHTML = '';
+            clues.forEach(clue => {
+                const item = document.createElement('li');
+                item.className = 'clue-item';
+                
+                // Texto de la pista
+                const textSpan = document.createElement('span');
+                textSpan.className = 'clue-text';
+                textSpan.textContent = clue.text;
+                item.appendChild(textSpan);
+                // Estado de respuesta
+                const statusSpan = document.createElement('span');
+                statusSpan.className = 'clue-status';
+                if (placedAnswers[clue.id]) {
+                    statusSpan.innerHTML = `✍️ <strong>${placedAnswers[clue.id]}</strong>`;
+                    statusSpan.style.color = 'var(--color-purple)';
+                } else {
+                    statusSpan.innerHTML = `❓`;
+                    statusSpan.style.color = 'var(--text-muted)';
+                }
+                item.appendChild(statusSpan);
+                // Eventos de clic
+                item.addEventListener('click', () => {
+                    handleClueClick(clue);
+                });
+                container.appendChild(item);
+            });
+        }
+        function handleClueClick(clue) {
+            if (selectedToken !== null) {
+                handlePlacement([clue.id], selectedToken);
+            } else {
+                // TTS hablar pista
+                MathAudio.playClick();
+                let speakText = clue.text
+                    .replace('Horizontal:', 'Horizontal')
+                    .replace('Vertical:', 'Vertical')
+                    .replace('+', ' más ')
+                    .replace('-', ' menos ')
+                    .replace('×', ' por ')
+                    .replace('÷', ' dividido en ');
+                
+                // Encontrar el botón de TTS del crucigrama para animarlo
+                const headerText = document.getElementById('game-instruction');
+                const ttsBtn = headerText.nextElementSibling;
+                MathAudio.speak(speakText, ttsBtn);
+            }
+        }
+        function renderAnswerBank() {
+            const container = document.getElementById('answer-bank');
+            container.innerHTML = '';
+            const data = rounds[currentRoundIndex];
+            const placedValues = Object.values(placedAnswers).filter(v => v !== null);
+            data.answers.forEach(val => {
+                // Si el valor ya está colocado en el crucigrama, no dibujarlo en el banco
+                const idx = placedValues.indexOf(val);
+                if (idx !== -1) {
+                    placedValues.splice(idx, 1);
+                    return; // saltar
+                }
+                const token = document.createElement('div');
+                token.className = 'answer-token';
+                token.draggable = true;
+                token.textContent = val;
+                if (selectedToken === val) {
+                    token.classList.add('selected');
+                }
+                // Drag Start
+                token.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', val);
+                    selectedToken = val;
+                });
+                // Clic para móviles
+                token.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    MathAudio.playClick();
+                    if (selectedToken === val) {
+                        selectedToken = null;
+                    } else {
+                        selectedToken = val;
+                    }
+                    updateInterface();
+                });
+                container.appendChild(token);
+            });
+        }
+        function validarCrucigrama() {
+            let allCorrect = true;
+            let missingAnswer = false;
+            const incorrectClues = [];
+            clues.forEach(clue => {
+                const placed = placedAnswers[clue.id];
+                if (!placed) {
+                    allCorrect = false;
+                    missingAnswer = true;
+                } else if (placed !== clue.answer) {
+                    allCorrect = false;
+                    incorrectClues.push(clue.id);
+                }
+            });
+            const feedback = document.getElementById('feedback-panel');
+            const title = document.getElementById('feedback-title');
+            const msg = document.getElementById('feedback-msg');
+            const emoji = document.getElementById('feedback-emoji');
+            const nextBtn = document.getElementById('feedback-btn');
+            if (allCorrect) {
+                // Acierto!
+                MathAudio.playCorrect();
+                MathApp.lanzarConfeti();
+                MathApp.addScore(20);
+                title.textContent = "🎉 ¡Excelente!";
+                title.className = "feedback-title success";
+                emoji.textContent = "🧩";
+                const successMsg = "¡Completaste correctamente el crucigrama matemático!";
+                msg.textContent = successMsg;
+                feedback.style.display = 'flex';
+                MathAudio.speak(successMsg);
+                nextBtn.onclick = () => {
+                    currentRoundIndex++;
+                    if (currentRoundIndex < rounds.length) {
+                        cargarRonda();
+                    } else {
+                        document.getElementById('progress-bar').style.width = '100%';
+                        mostrarVictoriaFinal();
+                    }
+                };
+            } else {
+                // Fallo!
+                MathAudio.playIncorrect();
+                
+                let errorMsg = "Algunas respuestas no son correctas. Inténtalo nuevamente.";
+                if (missingAnswer && incorrectClues.length === 0) {
+                    errorMsg = "Aún faltan respuestas por colocar en el crucigrama.";
+                }
+                MathAudio.speak(errorMsg);
+                // Sacudir las casillas incorrectas
+                incorrectClues.forEach(clueId => {
+                    const clue = clues.find(c => c.id === clueId);
+                    if (clue) {
+                        const cells = getClueCells(clue);
+                        cells.forEach(cell => {
+                            const inputEl = document.querySelector(`.crossword-cell-input[data-row="${cell.row}"][data-col="${cell.col}"]`);
+                            if (inputEl) {
+                                inputEl.classList.add('incorrect');
+                                inputEl.classList.add('shake-element');
+                                setTimeout(() => {
+                                    inputEl.classList.remove('shake-element');
+                                    inputEl.classList.remove('incorrect');
+                                }, 800);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        function mostrarVictoriaFinal() {
+            const feedback = document.getElementById('feedback-panel');
+            const title = document.getElementById('feedback-title');
+            const msg = document.getElementById('feedback-msg');
+            const emoji = document.getElementById('feedback-emoji');
+            const nextBtn = document.getElementById('feedback-btn');
+            MathApp.lanzarConfeti();
+            MathAudio.playWin();
+            title.textContent = "🏆 ¡Crucigrama Completado!";
+            title.className = "feedback-title success";
+            emoji.textContent = "🏅";
+            
+            const winMsg = "¡Has demostrado que dominas las sumas, restas, multiplicaciones y divisiones!";
+            msg.textContent = winMsg;
+            nextBtn.textContent = "Siguiente Juego 🚀";
+            feedback.style.display = 'flex';
+            MathAudio.speak(winMsg);
+            nextBtn.onclick = () => {
+                window.location.href = 'juego5.html';
+            };
+        }
+        function reiniciarRonda() {
+            MathAudio.playClick();
+            clues.forEach(clue => {
+                placedAnswers[clue.id] = null;
+            });
+            selectedToken = null;
+            updateInterface();
+        }
+        // Permitir deseleccionar haciendo clic fuera de fichas y celdas
+        document.body.addEventListener('click', () => {
+            if (selectedToken !== null) {
+                selectedToken = null;
+                updateInterface();
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarRonda();
+        });
+    </script>
+</body>
 </html>
