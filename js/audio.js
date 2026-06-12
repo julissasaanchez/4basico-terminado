@@ -153,14 +153,32 @@ speak(text, buttonElement = null) {
     utterance.lang = 'es-ES';
     
     // Intentar buscar una voz en español chileno o general
-    const voices = window.speechSynthesis.getVoices();
-    const esVoice = voices.find(voice => voice.lang.includes('es-CL') || voice.lang.includes('es-ES') || voice.lang.includes('es-'));
-    if (esVoice) {
-    utterance.voice = esVoice;
-    }
+    // Buscar preferentemente una voz femenina
+const voices = window.speechSynthesis.getVoices();
+
+const femaleVoice =
+        voices.find(v => v.name.includes('Paulina')) ||
+        voices.find(v => v.name.includes('Helena')) ||
+        voices.find(v => v.name.includes('Sabina')) ||
+        voices.find(v => v.name.includes('Monica')) ||
+        voices.find(v => v.name.includes('Microsoft Laura')) ||
+        voices.find(v => v.name.includes('Female')) ||
+        voices.find(v =>
+            v.lang.startsWith('es') &&
+            (
+            v.name.toLowerCase().includes('female') ||
+            v.name.toLowerCase().includes('mujer')
+            )
+        ) ||
+        voices.find(v => v.lang.includes('es-CL')) ||
+        voices.find(v => v.lang.includes('es-ES'));
+
+        if (femaleVoice) {
+        utterance.voice = femaleVoice;
+        }
     
-    utterance.rate = 1.0;  // velocidad normal tirando a infantil, pausada
-    utterance.pitch = 1.25; // tono ligeramente agudo e infantil
+        utterance.rate = 0.95;
+        utterance.pitch = 1.35;
 
     if (buttonElement) {
     buttonElement.classList.add('playing');
